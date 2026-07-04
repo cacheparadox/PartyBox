@@ -20,7 +20,6 @@ function useGame() {
 export default function DoubleDareView() {
   const { state, players, isHost, playerId, sendAction } = useGame();
   const [bidCount, setBidCount] = useState(5);
-  const [bidTime, setBidTime] = useState(30);
   const [answer, setAnswer] = useState('');
 
   if (!state) return null;
@@ -58,8 +57,9 @@ export default function DoubleDareView() {
           <div className="card p-8 border-yellow shadow-spray-sm bg-offblack">
             <p className="section-label mb-2">TOPIC</p>
             <p className="font-bebas text-5xl text-yellow">{state.topic}</p>
-            <div className="tag-yellow mx-auto mt-4 inline-flex text-lg px-4 py-1">
-              {'⭐'.repeat(state.difficulty)} DIFFICULTY
+            <div className="flex justify-center gap-4 mt-4 flex-wrap">
+              <span className="tag-yellow text-lg px-4 py-1">{'⭐'.repeat(state.difficulty)} DIFFICULTY</span>
+              <span className="tag-cyan text-lg px-4 py-1 text-black">⏱️ {state.roundTimeLimit} SECONDS</span>
             </div>
           </div>
           <p className="font-bebas text-2xl text-white/70">
@@ -79,27 +79,10 @@ export default function DoubleDareView() {
                   +
                 </button>
               </div>
-              <div className="px-4">
-                <p className="font-marker text-white/60 text-lg mb-3">In how many seconds?</p>
-                <div className="flex items-center gap-4">
-                  <span className="font-bebas text-2xl text-white/40">5S</span>
-                  <input 
-                    type="range" 
-                    min={5} 
-                    max={60} 
-                    step={5}
-                    value={bidTime}
-                    onChange={(e) => setBidTime(Number(e.target.value))}
-                    className="flex-1 h-2 bg-white/20 rounded-lg appearance-none cursor-pointer accent-[#F5E642]"
-                  />
-                  <span className="font-bebas text-2xl text-white/40">60S</span>
-                </div>
-                <p className="font-bebas text-4xl text-yellow mt-4">{bidTime} SECONDS</p>
-              </div>
               <div className="pt-4">
-                <button id="btn-submit-bid" onClick={() => sendAction('SUBMIT_BID', { count: bidCount, timeLimit: bidTime })}
+                <button id="btn-submit-bid" onClick={() => sendAction('SUBMIT_BID', { count: bidCount })}
                   className="btn-primary w-full !bg-yellow !border-yellow !text-black text-2xl py-4 animate-jitter">
-                  BID: {bidCount} IN {bidTime}S
+                  BID: {bidCount} ITEMS
                 </button>
               </div>
             </div>
@@ -125,7 +108,7 @@ export default function DoubleDareView() {
             <p className="font-bebas text-7xl text-cyan mb-2">
               {state.currentBid.count} ITEMS
             </p>
-            <p className="font-bebas text-3xl text-white/50 mb-6">IN {state.currentBid.timeLimit} SECONDS</p>
+            <p className="font-bebas text-3xl text-white/50 mb-6">IN {state.roundTimeLimit} SECONDS</p>
             <div className="tag-cyan mx-auto inline-flex px-4 py-2">
               TOPIC: {state.topic}
             </div>

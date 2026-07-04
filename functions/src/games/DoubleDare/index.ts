@@ -25,7 +25,7 @@ const DOUBLE_DARE: GamePlugin = {
       gameId: 'double-dare',
       topic: (topic as { topic: string }).topic,
       difficulty: ((topic as { difficulty: number }).difficulty ?? 1) as 1 | 2 | 3,
-      timeLimitOptions: TIME_LIMIT_OPTIONS,
+      roundTimeLimit: pickRandom(TIME_LIMIT_OPTIONS) as number,
       currentBid: null,
       doubledBy: null,
       answers: [],
@@ -53,6 +53,7 @@ const DOUBLE_DARE: GamePlugin = {
             phase: 'gameplay',
             topic: (topic as { topic: string }).topic,
             difficulty: ((topic as { difficulty: number }).difficulty ?? 1) as 1 | 2 | 3,
+            roundTimeLimit: pickRandom(TIME_LIMIT_OPTIONS) as number,
             currentBid: null,
             doubledBy: null,
             answers: [],
@@ -73,7 +74,6 @@ const DOUBLE_DARE: GamePlugin = {
             currentBid: {
               playerId,
               count: data.count as number,
-              timeLimit: data.timeLimit as number,
             },
           },
         };
@@ -87,7 +87,7 @@ const DOUBLE_DARE: GamePlugin = {
             doubledBy: playerId,
             phase: 'gameplay',
             phaseStartedAt: Date.now(),
-            phaseTimeoutMs: s.currentBid.timeLimit * 1000,
+            phaseTimeoutMs: s.roundTimeLimit * 1000,
           },
         };
       }
@@ -100,7 +100,7 @@ const DOUBLE_DARE: GamePlugin = {
             ...s,
             phase: 'gameplay',
             phaseStartedAt: Date.now(),
-            phaseTimeoutMs: s.currentBid.timeLimit * 1000,
+            phaseTimeoutMs: s.roundTimeLimit * 1000,
           },
         };
       }
@@ -136,7 +136,7 @@ const DOUBLE_DARE: GamePlugin = {
           const newScores = { ...s.scores };
           if (valid && nextAnswerIndex >= targetCount) {
             // Completed bid — bidder scores
-            const timeMultiplier = (65 - s.currentBid!.timeLimit) / 10;
+            const timeMultiplier = (65 - s.roundTimeLimit) / 10;
             const baseScore = Math.round(targetCount * (s.difficulty * 10) * timeMultiplier);
             newScores[s.currentBid!.playerId] = (newScores[s.currentBid!.playerId] ?? 0) + baseScore;
           } else if (s.doubledBy) {
@@ -178,6 +178,7 @@ const DOUBLE_DARE: GamePlugin = {
             biddingIndex: nextBidding,
             topic: (topic as { topic: string }).topic,
             difficulty: ((topic as { difficulty: number }).difficulty ?? 1) as 1 | 2 | 3,
+            roundTimeLimit: pickRandom(TIME_LIMIT_OPTIONS) as number,
             currentBid: null,
             doubledBy: null,
             answers: [],

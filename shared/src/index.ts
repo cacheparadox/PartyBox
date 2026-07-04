@@ -85,11 +85,10 @@ export interface DoubleDareGameState extends BaseGameState {
   gameId: 'double-dare';
   topic: string;
   difficulty: 1 | 2 | 3;
-  timeLimitOptions: number[]; // seconds options shown to bidder
+  roundTimeLimit: number; // 5s to 60s randomly assigned by game
   currentBid: {
     playerId: string;
     count: number;
-    timeLimit: number;
   } | null;
   doubledBy: string | null; // playerId who issued double dare
   answers: string[];

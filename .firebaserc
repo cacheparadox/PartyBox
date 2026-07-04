@@ -1,3 +1,7 @@
 {
-  "projects": {}
+  "projects": {
+    "default": "partybox-53d67"
+  },
+  "targets": {},
+  "etags": {}
 }
