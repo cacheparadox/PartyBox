@@ -4,7 +4,7 @@ import type { SlipItInGameState, SlipItInPhrase } from '../../../../../shared/sr
 import { getContentEntries } from '../../services/ContentService';
 
 
-const PHRASES_PER_PLAYER = 3;
+const PHRASES_PER_PLAYER = 5;
 
 function generatePhraseId(): string {
   return Math.random().toString(36).substring(2, 10);

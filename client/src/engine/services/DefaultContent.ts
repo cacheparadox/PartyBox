@@ -1,6 +1,36 @@
 import type { ContentEntry } from '../../../../shared/src/index';
 
 export const DEFAULT_CONTENT: ContentEntry[] = [
+  { "type": "phrase", "phrase": "I completely agree with you." },
+  { "type": "phrase", "phrase": "That reminds me of a dream I had." },
+  { "type": "phrase", "phrase": "Could you repeat that?" },
+  { "type": "phrase", "phrase": "I read an article about this yesterday." },
+  { "type": "phrase", "phrase": "To be honest, I'm not sure." },
+  { "type": "phrase", "phrase": "Wow, I never thought of it that way." },
+  { "type": "phrase", "phrase": "Is it getting hot in here?" },
+  { "type": "phrase", "phrase": "I feel like we're going in circles." },
+  { "type": "phrase", "phrase": "Anyway, back to the main point." },
+  { "type": "phrase", "phrase": "I don't think that's entirely true." },
+  { "type": "phrase", "phrase": "Let's take a step back for a second." },
+  { "type": "phrase", "phrase": "What was I going to say... Oh right." },
+  { "type": "phrase", "phrase": "Have you seen any good movies lately?" },
+  { "type": "phrase", "phrase": "I'm literally starving right now." },
+  { "type": "phrase", "phrase": "That's exactly what my mom used to say." },
+  { "type": "phrase", "phrase": "Hold on, I just got a text." },
+  { "type": "phrase", "phrase": "My brain is totally fried right now." },
+  { "type": "phrase", "phrase": "This is giving me deja vu." },
+  { "type": "phrase", "phrase": "I swear I've heard this before." },
+  { "type": "phrase", "phrase": "Can we just pause for a second?" },
+  { "type": "phrase", "phrase": "I think someone is at the door." },
+  { "type": "phrase", "phrase": "You know what I mean?" },
+  { "type": "phrase", "phrase": "It is what it is." },
+  { "type": "phrase", "phrase": "I couldn't have said it better myself." },
+  { "type": "phrase", "phrase": "That's a really good question." },
+  { "type": "phrase", "phrase": "I'm not gonna lie." },
+  { "type": "phrase", "phrase": "At the end of the day..." },
+  { "type": "phrase", "phrase": "Does that make sense?" },
+  { "type": "phrase", "phrase": "I was just about to say that!" },
+  { "type": "phrase", "phrase": "Long story short..." },
   { "type": "phrase", "phrase": "Bhai, traffic was insane today." },
   { "type": "phrase", "phrase": "Momo khane chalein?" },
   { "type": "phrase", "phrase": "Let's plan a Goa trip next month." },
@@ -31,6 +61,300 @@ export const DEFAULT_CONTENT: ContentEntry[] = [
   { "type": "phrase", "phrase": "Kuch meetha ho jaye?" },
   { "type": "phrase", "phrase": "Yaar, mujhe ghar jana hai." },
   { "type": "phrase", "phrase": "Bhai, tera Netflix password kya tha?" },
+  { "type": "phrase", "phrase": "Let's circle back to that later." },
+  { "type": "phrase", "phrase": "Can you share your screen?" },
+  { "type": "phrase", "phrase": "I think you're on mute." },
+  { "type": "phrase", "phrase": "Let's take this offline." },
+  { "type": "phrase", "phrase": "Just touching base on this." },
+  { "type": "phrase", "phrase": "I'll ping you later." },
+  { "type": "phrase", "phrase": "Let's sync up tomorrow." },
+  { "type": "phrase", "phrase": "It's a paradigm shift." },
+  { "type": "phrase", "phrase": "We need to think outside the box." },
+  { "type": "phrase", "phrase": "That's low-hanging fruit." },
+  { "type": "phrase", "phrase": "Let's pivot our strategy." },
+  { "type": "phrase", "phrase": "I have a hard stop at 5." },
+  { "type": "phrase", "phrase": "Can we leverage that?" },
+  { "type": "phrase", "phrase": "Let's run it up the flagpole." },
+  { "type": "phrase", "phrase": "It's a win-win situation." },
+  { "type": "phrase", "phrase": "We need to move the needle." },
+  { "type": "phrase", "phrase": "Let's drill down into the details." },
+  { "type": "phrase", "phrase": "It's on my radar." },
+  { "type": "phrase", "phrase": "I'll loop you in." },
+  { "type": "phrase", "phrase": "Let's put a pin in that." },
+  { "type": "phrase", "phrase": "It's a game changer." },
+  { "type": "phrase", "phrase": "We need to be proactive." },
+  { "type": "phrase", "phrase": "Let's manage expectations." },
+  { "type": "phrase", "phrase": "It's a steep learning curve." },
+  { "type": "phrase", "phrase": "We're on the same page." },
+  { "type": "phrase", "phrase": "Let's touch base next week." },
+  { "type": "phrase", "phrase": "I'll get back to you on that." },
+  { "type": "phrase", "phrase": "Let's table that discussion." },
+  { "type": "phrase", "phrase": "It's a moving target." },
+  { "type": "phrase", "phrase": "We need more bandwidth." },
+  { "type": "phrase", "phrase": "Let's regroup in an hour." },
+  { "type": "phrase", "phrase": "It's a work in progress." },
+  { "type": "phrase", "phrase": "We're in a holding pattern." },
+  { "type": "phrase", "phrase": "Let's hit the ground running." },
+  { "type": "phrase", "phrase": "It's a top priority." },
+  { "type": "phrase", "phrase": "We need to stay focused." },
+  { "type": "phrase", "phrase": "Let's keep the momentum going." },
+  { "type": "phrase", "phrase": "It's a collaborative effort." },
+  { "type": "phrase", "phrase": "We're making good progress." },
+  { "type": "phrase", "phrase": "Let's wrap this up." },
+  { "type": "phrase", "phrase": "I'm craving biryani right now." },
+  { "type": "phrase", "phrase": "Did you get the Zomato notification?" },
+  { "type": "phrase", "phrase": "My Blinkit order just arrived." },
+  { "type": "phrase", "phrase": "Auto walas are charging too much." },
+  { "type": "phrase", "phrase": "The metro was so crowded today." },
+  { "type": "phrase", "phrase": "Have you tried that new cafe?" },
+  { "type": "phrase", "phrase": "I need a strong cup of chai." },
+  { "type": "phrase", "phrase": "Let's go for a walk." },
+  { "type": "phrase", "phrase": "The weather is so unpredictable." },
+  { "type": "phrase", "phrase": "It's raining outside." },
+  { "type": "phrase", "phrase": "The sun is too bright." },
+  { "type": "phrase", "phrase": "I need a vacation." },
+  { "type": "phrase", "phrase": "Let's plan a road trip." },
+  { "type": "phrase", "phrase": "Have you booked the tickets?" },
+  { "type": "phrase", "phrase": "The hotel is too expensive." },
+  { "type": "phrase", "phrase": "Let's find an Airbnb." },
+  { "type": "phrase", "phrase": "My Wi-Fi is acting up." },
+  { "type": "phrase", "phrase": "The power went out." },
+  { "type": "phrase", "phrase": "My phone battery is dying." },
+  { "type": "phrase", "phrase": "Do you have a charger?" },
+  { "type": "phrase", "phrase": "I need to reply to this email." },
+  { "type": "phrase", "phrase": "My boss is annoying me." },
+  { "type": "phrase", "phrase": "I have a deadline to meet." },
+  { "type": "phrase", "phrase": "Let's order some pizza." },
+  { "type": "phrase", "phrase": "I'm trying to eat healthy." },
+  { "type": "phrase", "phrase": "This diet is not working." },
+  { "type": "phrase", "phrase": "I need to hit the gym." },
+  { "type": "phrase", "phrase": "I'm feeling so lazy today." },
+  { "type": "phrase", "phrase": "Let's just binge-watch a show." },
+  { "type": "phrase", "phrase": "Have you seen the latest episode?" },
+  { "type": "phrase", "phrase": "No spoilers please!" },
+  { "type": "phrase", "phrase": "That ending was so disappointing." },
+  { "type": "phrase", "phrase": "I can't wait for the next season." },
+  { "type": "phrase", "phrase": "Let's go shopping." },
+  { "type": "phrase", "phrase": "I have nothing to wear." },
+  { "type": "phrase", "phrase": "This shirt doesn't fit me anymore." },
+  { "type": "phrase", "phrase": "I need a haircut." },
+  { "type": "phrase", "phrase": "My skin is breaking out." },
+  { "type": "phrase", "phrase": "I need a skincare routine." },
+  { "type": "phrase", "phrase": "Let's take a nap." },
+  { "type": "phrase", "phrase": "I didn't sleep well last night." },
+  { "type": "phrase", "phrase": "I had the weirdest dream." },
+  { "type": "phrase", "phrase": "Do you believe in ghosts?" },
+  { "type": "phrase", "phrase": "That sounds so spooky." },
+  { "type": "phrase", "phrase": "Let's watch a horror movie." },
+  { "type": "phrase", "phrase": "I'm too scared to sleep now." },
+  { "type": "phrase", "phrase": "Did you lock the door?" },
+  { "type": "phrase", "phrase": "Did you turn off the stove?" },
+  { "type": "phrase", "phrase": "I forgot my keys." },
+  { "type": "phrase", "phrase": "Where are my glasses?" },
+  { "type": "phrase", "phrase": "I can't find my phone." },
+  { "type": "phrase", "phrase": "Can you call my phone?" },
+  { "type": "phrase", "phrase": "It's on silent mode." },
+  { "type": "phrase", "phrase": "I found it under the pillow." },
+  { "type": "phrase", "phrase": "You're always losing things." },
+  { "type": "phrase", "phrase": "I have a bad memory." },
+  { "type": "phrase", "phrase": "What's the date today?" },
+  { "type": "phrase", "phrase": "Is it Friday yet?" },
+  { "type": "phrase", "phrase": "I can't wait for the weekend." },
+  { "type": "phrase", "phrase": "Let's go clubbing." },
+  { "type": "phrase", "phrase": "I'm not a party person." },
+  { "type": "phrase", "phrase": "Let's just chill at home." },
+  { "type": "phrase", "phrase": "We can play some board games." },
+  { "type": "phrase", "phrase": "Have you ever played Catan?" },
+  { "type": "phrase", "phrase": "Uno ruins friendships." },
+  { "type": "phrase", "phrase": "Monopoly takes too long." },
+  { "type": "phrase", "phrase": "Let's play something quick." },
+  { "type": "phrase", "phrase": "Who's keeping score?" },
+  { "type": "phrase", "phrase": "You're totally cheating." },
+  { "type": "phrase", "phrase": "I saw you take that card." },
+  { "type": "phrase", "phrase": "It's just a game, chill." },
+  { "type": "phrase", "phrase": "I'm very competitive." },
+  { "type": "phrase", "phrase": "I hate losing." },
+  { "type": "phrase", "phrase": "Let's play another round." },
+  { "type": "phrase", "phrase": "Best out of three?" },
+  { "type": "phrase", "phrase": "You got lucky this time." },
+  { "type": "phrase", "phrase": "I'll beat you next time." },
+  { "type": "phrase", "phrase": "Do you want some water?" },
+  { "type": "phrase", "phrase": "I'm feeling thirsty." },
+  { "type": "phrase", "phrase": "Let's grab a drink." },
+  { "type": "phrase", "phrase": "Cheers to that!" },
+  { "type": "phrase", "phrase": "Happy birthday to you!" },
+  { "type": "phrase", "phrase": "Congratulations on the new job!" },
+  { "type": "phrase", "phrase": "When are you giving a treat?" },
+  { "type": "phrase", "phrase": "Let's go out for dinner." },
+  { "type": "phrase", "phrase": "The food here is amazing." },
+  { "type": "phrase", "phrase": "This is too spicy." },
+  { "type": "phrase", "phrase": "I can't handle spice." },
+  { "type": "phrase", "phrase": "Pass me a tissue." },
+  { "type": "phrase", "phrase": "I ate too much." },
+  { "type": "phrase", "phrase": "I'm so full." },
+  { "type": "phrase", "phrase": "Let's get some dessert." },
+  { "type": "phrase", "phrase": "There's always room for ice cream." },
+  { "type": "phrase", "phrase": "What's your favorite flavor?" },
+  { "type": "phrase", "phrase": "Chocolate is the best." },
+  { "type": "phrase", "phrase": "Vanilla is too boring." },
+  { "type": "phrase", "phrase": "Have you tried matcha?" },
+  { "type": "phrase", "phrase": "It tastes like grass." },
+  { "type": "phrase", "phrase": "To each their own." },
+  { "type": "phrase", "phrase": "Let's agree to disagree." },
+  { "type": "phrase", "phrase": "That's a fair point." },
+  { "type": "phrase", "phrase": "I see where you're coming from." },
+  { "type": "phrase", "phrase": "I respectfully disagree." },
+  { "type": "phrase", "phrase": "You have a point there." },
+  { "type": "phrase", "phrase": "That's exactly what I meant." },
+  { "type": "phrase", "phrase": "You took the words right out of my mouth." },
+  { "type": "phrase", "phrase": "Great minds think alike." },
+  { "type": "phrase", "phrase": "Fools seldom differ." },
+  { "type": "phrase", "phrase": "What a coincidence!" },
+  { "type": "phrase", "phrase": "Small world, isn't it?" },
+  { "type": "phrase", "phrase": "What are the chances?" },
+  { "type": "phrase", "phrase": "You won't believe this." },
+  { "type": "phrase", "phrase": "Tell me everything." },
+  { "type": "phrase", "phrase": "Spill the tea." },
+  { "type": "phrase", "phrase": "I have some juicy gossip." },
+  { "type": "phrase", "phrase": "Did you hear about them?" },
+  { "type": "phrase", "phrase": "They broke up." },
+  { "type": "phrase", "phrase": "They're getting married." },
+  { "type": "phrase", "phrase": "I didn't see that coming." },
+  { "type": "phrase", "phrase": "It was bound to happen." },
+  { "type": "phrase", "phrase": "That's none of our business." },
+  { "type": "phrase", "phrase": "Let's change the topic." },
+  { "type": "phrase", "phrase": "So, what else is new?" },
+  { "type": "phrase", "phrase": "How's the family?" },
+  { "type": "phrase", "phrase": "How are the kids doing?" },
+  { "type": "phrase", "phrase": "They grow up so fast." },
+  { "type": "phrase", "phrase": "Time flies." },
+  { "type": "phrase", "phrase": "It feels like just yesterday." },
+  { "type": "phrase", "phrase": "Those were the good old days." },
+  { "type": "phrase", "phrase": "I miss those times." },
+  { "type": "phrase", "phrase": "Nostalgia is hitting me hard." },
+  { "type": "phrase", "phrase": "Let's recreate that photo." },
+  { "type": "phrase", "phrase": "Cheese!" },
+  { "type": "phrase", "phrase": "That's a bad angle." },
+  { "type": "phrase", "phrase": "Let me retake it." },
+  { "type": "phrase", "phrase": "Use a filter." },
+  { "type": "phrase", "phrase": "No filter needed." },
+  { "type": "phrase", "phrase": "You look great." },
+  { "type": "phrase", "phrase": "Stop flattering me." },
+  { "type": "phrase", "phrase": "I mean it." },
+  { "type": "phrase", "phrase": "Thank you for the compliment." },
+  { "type": "phrase", "phrase": "You made my day." },
+  { "type": "phrase", "phrase": "That's so sweet of you." },
+  { "type": "phrase", "phrase": "Don't mention it." },
+  { "type": "phrase", "phrase": "Anytime." },
+  { "type": "phrase", "phrase": "I'm always here for you." },
+  { "type": "phrase", "phrase": "That's what friends are for." },
+  { "type": "phrase", "phrase": "A friend in need is a friend indeed." },
+  { "type": "phrase", "phrase": "Let's stay in touch." },
+  { "type": "phrase", "phrase": "Don't be a stranger." },
+  { "type": "phrase", "phrase": "Hit me up when you're free." },
+  { "type": "phrase", "phrase": "Let's catch up soon." },
+  { "type": "phrase", "phrase": "It was great seeing you." },
+  { "type": "phrase", "phrase": "Likewise." },
+  { "type": "phrase", "phrase": "Take care of yourself." },
+  { "type": "phrase", "phrase": "Drive safe." },
+  { "type": "phrase", "phrase": "Text me when you reach." },
+  { "type": "phrase", "phrase": "I've reached safely." },
+  { "type": "phrase", "phrase": "Had a great time." },
+  { "type": "phrase", "phrase": "Let's do this again." },
+  { "type": "phrase", "phrase": "Absolutely." },
+  { "type": "phrase", "phrase": "Looking forward to it." },
+  { "type": "phrase", "phrase": "Have a good night." },
+  { "type": "phrase", "phrase": "Sweet dreams." },
+  { "type": "phrase", "phrase": "Good morning!" },
+  { "type": "phrase", "phrase": "Did you sleep well?" },
+  { "type": "phrase", "phrase": "I need my morning coffee." },
+  { "type": "phrase", "phrase": "Let's start the day." },
+  { "type": "phrase", "phrase": "Today is going to be a good day." },
+  { "type": "phrase", "phrase": "Fingers crossed." },
+  { "type": "phrase", "phrase": "Knock on wood." },
+  { "type": "phrase", "phrase": "Don't jinx it." },
+  { "type": "phrase", "phrase": "Everything will be fine." },
+  { "type": "phrase", "phrase": "Trust the process." },
+  { "type": "phrase", "phrase": "Go with the flow." },
+  { "type": "phrase", "phrase": "Whatever happens, happens." },
+  { "type": "phrase", "phrase": "Que sera, sera." },
+  { "type": "phrase", "phrase": "Carpe diem." },
+  { "type": "phrase", "phrase": "YOLO." },
+  { "type": "phrase", "phrase": "FOMO is real." },
+  { "type": "phrase", "phrase": "I'm feeling left out." },
+  { "type": "phrase", "phrase": "You should have come." },
+  { "type": "phrase", "phrase": "Next time for sure." },
+  { "type": "phrase", "phrase": "Don't make excuses." },
+  { "type": "phrase", "phrase": "I promise." },
+  { "type": "phrase", "phrase": "Pinky swear." },
+  { "type": "phrase", "phrase": "Cross my heart." },
+  { "type": "phrase", "phrase": "Hope to die." },
+  { "type": "phrase", "phrase": "Stick a needle in my eye." },
+  { "type": "phrase", "phrase": "That's a bit extreme." },
+  { "type": "phrase", "phrase": "Just kidding." },
+  { "type": "phrase", "phrase": "No pun intended." },
+  { "type": "phrase", "phrase": "Pun very much intended." },
+  { "type": "phrase", "phrase": "That was a bad joke." },
+  { "type": "phrase", "phrase": "Dad jokes are the best." },
+  { "type": "phrase", "phrase": "I'm laughing so hard." },
+  { "type": "phrase", "phrase": "ROFL." },
+  { "type": "phrase", "phrase": "LMAO." },
+  { "type": "phrase", "phrase": "LOL." },
+  { "type": "phrase", "phrase": "You're hilarious." },
+  { "type": "phrase", "phrase": "Stop making me laugh." },
+  { "type": "phrase", "phrase": "My stomach hurts." },
+  { "type": "phrase", "phrase": "I can't breathe." },
+  { "type": "phrase", "phrase": "Tears are streaming down my face." },
+  { "type": "phrase", "phrase": "That's the funniest thing ever." },
+  { "type": "phrase", "phrase": "Okay, calm down." },
+  { "type": "phrase", "phrase": "Take a deep breath." },
+  { "type": "phrase", "phrase": "Inhale, exhale." },
+  { "type": "phrase", "phrase": "I'm feeling much better." },
+  { "type": "phrase", "phrase": "Let's get back to work." },
+  { "type": "phrase", "phrase": "Break time is over." },
+  { "type": "phrase", "phrase": "Back to the grind." },
+  { "type": "phrase", "phrase": "Hustle harder." },
+  { "type": "phrase", "phrase": "Work smart, not hard." },
+  { "type": "phrase", "phrase": "That's the mantra." },
+  { "type": "phrase", "phrase": "Live, laugh, love." },
+  { "type": "phrase", "phrase": "Too cliché." },
+  { "type": "phrase", "phrase": "Keep it real." },
+  { "type": "phrase", "phrase": "Stay true to yourself." },
+  { "type": "phrase", "phrase": "Be authentic." },
+  { "type": "phrase", "phrase": "You do you." },
+  { "type": "phrase", "phrase": "Haters gonna hate." },
+  { "type": "phrase", "phrase": "Shake it off." },
+  { "type": "phrase", "phrase": "Don't let them get to you." },
+  { "type": "phrase", "phrase": "Stay positive." },
+  { "type": "phrase", "phrase": "Good vibes only." },
+  { "type": "phrase", "phrase": "Peace out." },
+  { "type": "phrase", "phrase": "Drop the mic." },
+  { "type": "phrase", "phrase": "Bhai, UPI kar de." },
+  { "type": "phrase", "phrase": "Mera Swiggy Instamart aa gaya." },
+  { "type": "phrase", "phrase": "Bhai, traffic police ne pakad liya." },
+  { "type": "phrase", "phrase": "Aaj auto wala meter pe chala." },
+  { "type": "phrase", "phrase": "Delhi ki garmi maar dalegi." },
+  { "type": "phrase", "phrase": "Mumbai ki baarish is crazy." },
+  { "type": "phrase", "phrase": "Bhai, Bangalore ka traffic is a joke." },
+  { "type": "phrase", "phrase": "Kya din aa gaye hain." },
+  { "type": "phrase", "phrase": "Are you serious?" },
+  { "type": "phrase", "phrase": "Bhai, sach bol raha hai?" },
+  { "type": "phrase", "phrase": "Kasam se." },
+  { "type": "phrase", "phrase": "Mother promise." },
+  { "type": "phrase", "phrase": "Main nahi manta." },
+  { "type": "phrase", "phrase": "Dekh bhai, seedhi si baat hai." },
+  { "type": "phrase", "phrase": "Mudde ki baat pe aao." },
+  { "type": "phrase", "phrase": "Ghoom fhir ke wahi baat." },
+  { "type": "phrase", "phrase": "Baat to sahi hai." },
+  { "type": "phrase", "phrase": "Tu samajh nahi raha hai." },
+  { "type": "phrase", "phrase": "Mera dimaag mat kha." },
+  { "type": "phrase", "phrase": "Aaram se baat kar." },
+  { "type": "phrase", "phrase": "Gussa mat kar." },
+  { "type": "phrase", "phrase": "Chill maar na bhai." },
+  { "type": "phrase", "phrase": "Kya scene hai aaj raat ka?" },
+  { "type": "phrase", "phrase": "Plan banate hain." },
+  { "type": "phrase", "phrase": "Sabh cancel ho gaya." },
+  { "type": "phrase", "phrase": "Humesha ka yahi hai." },
   {
     "type": "word-category",
     "word": "Dog",
@@ -1940,1922 +2264,1538 @@ export const DEFAULT_CONTENT: ContentEntry[] = [
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I've never tasted orange",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I hate tigers",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I accidentally swallowed a sofa",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I dropped my knife in the toilet",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "My spirit animal is a otter",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I'm craving some sausage",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I want to fight Deshaun Watson",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I broke the umbrella",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I can't stand celery",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I love eating popcorn",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I am friends with Tom Cruise",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I stole a phone",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I had a dream about Elon Musk",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I am secretly a armadillo",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I love eating nuts",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "My spirit animal is a lynx",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I am friends with Kylie Jenner",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I had a dream about Harry Styles",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "Did you know I went to New Zealand?",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I threw away the sink",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I broke the toothbrush",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I would love to visit Poland",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I smell like hot dog",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I stole a suit",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I want to fight Ben Affleck",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I dropped my phone in the toilet",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I want to move to Pakistan",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I can't stand strawberry",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I smell like burger",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "Where did you put the pencil?",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I was born in Angola",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I'm allergic to mooses",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I threw away the freezer",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "Do you think Deshaun Watson is cute?",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I broke the fridge",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I smell like peanut",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I broke the bracelet",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I would love to visit Angola",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I want to fight Liam Payne",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I want to fight Theresa May",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "My spirit animal is a bear",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I smell like shrimp",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I smell like sandwich",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I really need a shampoo",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I'm allergic to elephants",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I love eating tomato",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I've never tasted cookie",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I can't stand pomegranate",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I really need a key",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I am banned from China",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I love eating celery",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I can't stand cake",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I would love to visit Jordan",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I think Christian Bale is overrated",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I lost my toothbrush yesterday",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I am banned from Italy",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I am friends with Eminem",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I saw Angela Merkel at the store",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I am friends with Emmanuel Macron",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I love eating lentils",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I love eating wrap",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I am banned from India",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I really need a faucet",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "My spirit animal is a panda",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I saw Ariana Grande at the store",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "Did you know I went to South Africa?",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "Have you ever seen a tapir?",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I am secretly a serval",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I broke the remote",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I am banned from Netherlands",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I think Chris Evans is overrated",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I would love to visit Philippines",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I've never tasted strawberry",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I lost my bracelet yesterday",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I can't stand potato",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I think Adele is overrated",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "Have you ever seen a rat?",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I think Robert Downey Jr. is overrated",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I would love to visit Italy",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I was born in Greece",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "Where did you put the shoes?",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "Where did you put the remote?",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I had a dream about Barack Obama",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I stole a bowl",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I think Ed Sheeran is overrated",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "My spirit animal is a seal",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "Have you ever seen a shark?",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I'm allergic to seahorses",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I want to fight Stephen Colbert",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I'm craving some donut",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "My spirit animal is a sheep",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I love eating pear",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "Did you know I went to Cameroon?",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I want to fight Peyton Manning",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I am secretly a bobcat",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I am addicted to spinach",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I smell like mushroom",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I saw Isaac Newton at the store",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I really need a binder",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I'm allergic to turkeys",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "My spirit animal is a horse",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I hate wolfs",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I stole a broom",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I love eating zucchini",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I am friends with Drew Brees",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I lost my tape yesterday",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I'm craving some watermelon",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I was born in Saudi Arabia",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I want to move to USA",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I accidentally swallowed a skirt",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I broke the marker",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I think James Fallon is overrated",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "Where did you put the scarf?",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "Do you think Post Malone is cute?",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I want to move to Chile",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I can't stand grape",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I am banned from Algeria",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I stole a napkin",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I've never tasted sausage",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I can't stand cabbage",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I hate sheeps",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I had a dream about Oprah Winfrey",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I had a dream about Camila Cabello",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I was born in Uganda",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I am banned from Mozambique",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I was born in Senegal",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I've never tasted cantaloupe",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I was born in Tunisia",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I want to move to Netherlands",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I love eating clementine",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "My spirit animal is a hamster",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I broke the dress",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I want to move to China",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I think Marie Curie is overrated",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "Did you know I went to Bangladesh?",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I broke the freezer",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I smell like plum",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I stole a binder",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I smell like pizza",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "Do you think Shawn Mendes is cute?",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I lost my lamp yesterday",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "My spirit animal is a bobcat",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I'm allergic to giraffes",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "Did you know I went to UK?",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "My spirit animal is a puma",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I can't stand blackberry",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I think Kyler Murray is overrated",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "Do you think Jeff Bezos is cute?",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I was born in Spain",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I hate hamsters",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "Where did you put the sandals?",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I think Brad Pitt is overrated",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I hate armadillos",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I smell like squash",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I am secretly a monkey",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "Where did you put the glue?",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I stole a cutting board",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I am secretly a elephant",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I am secretly a beaver",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I want to move to Philippines",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I am banned from Romania",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I'm allergic to llamas",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I was born in Netherlands",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I think Mahatma Gandhi is overrated",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I lost my mirror yesterday",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I really need a hoodie",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I threw away the jacket",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I am friends with Dua Lipa",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "Where did you put the toilet paper?",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I lost my mug yesterday",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I'm allergic to weasels",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I threw away the stapler",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I threw away the battery",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I am addicted to onion",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I am addicted to cantaloupe",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "Did you know I went to Ecuador?",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I am banned from Ukraine",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I am addicted to coconut",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I dropped my marker in the toilet",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "Where did you put the window?",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I am secretly a crab",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I hate sloths",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I dropped my chair in the toilet",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I smell like barley",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I am banned from Ivory Coast",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I am secretly a manatee",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I saw Novak Djokovic at the store",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "Did you know I went to Netherlands?",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I am friends with Nelson Mandela",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I saw Larry Page at the store",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I am secretly a butterfly",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I had a dream about Galileo Galilei",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I hate lynxs",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I saw Ellen DeGeneres at the store",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I broke the coat",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "Do you think Chris Evans is cute?",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I want to move to Jordan",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I stole a blanket",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I lost my scissors yesterday",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I want to fight Galileo Galilei",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I can't stand apricot",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I smell like blueberry",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I would love to visit Mexico",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I would love to visit Iraq",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I hate anteaters",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I was born in Algeria",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I've never tasted wheat",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I'm allergic to ants",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "Did you know I went to France?",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I lost my pillow yesterday",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I dropped my speaker in the toilet",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I smell like peach",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I am addicted to bacon",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I had a dream about Robert Downey Jr.",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I'm allergic to ravens",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "Where did you put the mattress?",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I am friends with Kim Kardashian",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I am secretly a cat",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I was born in Iran",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I am addicted to crab",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I can't stand chips",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I would love to visit Bulgaria",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I stole a crayon",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I want to fight Theodore Roosevelt",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I dropped my table in the toilet",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I love eating pretzel",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I love eating garlic",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I'm craving some eggs",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I am banned from Czech Republic",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I can't stand tangerine",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "My spirit animal is a alligator",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I would love to visit Netherlands",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I can't stand pumpkin seed",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I hate cats",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I hate pigeons",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I stole a highlighter",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I hate emus",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "Do you think Eminem is cute?",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I lost my glasses yesterday",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I hate octopuss",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "Have you ever seen a puma?",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I stole a pencil",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I am friends with Theodore Roosevelt",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I would love to visit South Korea",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I love eating sandwich",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I stole a stapler",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I smell like spinach",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "Do you think Galileo Galilei is cute?",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I really need a closet",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I broke the jeans",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I want to move to Hungary",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "My spirit animal is a armadillo",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I had a dream about Charles Darwin",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I want to fight Serena Williams",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "Do you think George Washington is cute?",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I had a dream about Cristiano Ronaldo",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I think Barack Obama is overrated",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I was born in Pakistan",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I'm allergic to badgers",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I threw away the window",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I am friends with Warren Buffett",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I've never tasted cashew",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I lost my wallet yesterday",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I lost my sofa yesterday",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "Have you ever seen a crab?",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I saw Rafael Nadal at the store",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I think Michael Jordan is overrated",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I want to move to Ireland",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I want to fight Nelson Mandela",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I want to fight Thomas Edison",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I'm craving some candy",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I think Serena Williams is overrated",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I lost my knife yesterday",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "Did you know I went to Chile?",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I smell like honeydew",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "Do you think Thomas Jefferson is cute?",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I would love to visit Thailand",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I accidentally swallowed a coat",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I'm craving some pumpkin",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I saw Warren Buffett at the store",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I saw John Oliver at the store",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I threw away the shoes",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I think Joe Biden is overrated",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I was born in Ukraine",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I smell like pasta",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "Did you know I went to India?",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I really need a coat",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I am addicted to eggs",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I hate elks",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I think Will Smith is overrated",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I really need a ruler",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "Have you ever seen a echidna?",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I want to fight Taylor Swift",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "Did you know I went to Bulgaria?",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I want to fight Jack Ma",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "Where did you put the cable?",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "Did you know I went to Portugal?",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "Do you think Donald Trump is cute?",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I've never tasted nectarine",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I love eating pineapple",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "Do you think Thomas Edison is cute?",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "Did you know I went to Greece?",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I think Aaron Rodgers is overrated",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I can't stand date",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I threw away the couch",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I think James Corden is overrated",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "Have you ever seen a ostrich?",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I was born in New Zealand",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I lost my couch yesterday",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "Did you know I went to Vietnam?",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I am addicted to raspberry",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I had a dream about Meryl Streep",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I am addicted to lentils",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I saw Hillary Clinton at the store",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I accidentally swallowed a toaster",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I can't stand pistachio",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I think Taylor Swift is overrated",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I would love to visit Hungary",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I am addicted to carrot",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "My spirit animal is a llama",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I've never tasted cherry",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I am banned from Lebanon",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I lost my blender yesterday",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I am addicted to watermelon",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I lost my pan yesterday",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I smell like olive",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I hate bobcats",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I smell like almond",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I threw away the calculator",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I was born in Nigeria",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I accidentally swallowed a window",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "My spirit animal is a starfish",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I saw Angelina Jolie at the store",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I was born in Indonesia",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I can't stand butter",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I am secretly a bear",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I'm craving some sushi",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "Where did you put the newspaper?",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I broke the sofa",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I broke the pen",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I accidentally swallowed a toilet paper",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I'm craving some lemon",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I'm craving some corn",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I really need a tablet",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I think Roger Federer is overrated",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "Have you ever seen a alpaca?",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I smell like ice cream",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I had a dream about Jimmy Kimmel",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I dropped my stove in the toilet",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I was born in Albania",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "My spirit animal is a alpaca",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I've never tasted candy",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I am friends with David Letterman",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I'm craving some potato",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I am friends with Deshaun Watson",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I was born in Kuwait",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I accidentally swallowed a plate",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I think Stephen Hawking is overrated",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I broke the pants",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "Did you know I went to Bosnia?",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I dropped my magazine in the toilet",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I saw Wright Brothers at the store",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I love eating chestnut",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I want to move to Venezuela",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I would love to visit Tanzania",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I love eating sunflower seed",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "My spirit animal is a chicken",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I've never tasted muffin",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I am friends with Thomas Jefferson",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I dropped my cable in the toilet",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I'm allergic to porcupines",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I dropped my sunglasses in the toilet",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I stole a hat",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I've never tasted blueberry",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I am secretly a donkey",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I threw away the whisk",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I hate koalas",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I think Emmanuel Macron is overrated",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I really need a sneakers",
     "difficulty": 2
   },
   {
-    "type": "phrase",
     "phrase": "I hate ants",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I lost my rug yesterday",
     "difficulty": 3
   },
   {
-    "type": "phrase",
     "phrase": "I've never tasted chestnut",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "Where did you put the bowl?",
     "difficulty": 1
   },
   {
-    "type": "phrase",
     "phrase": "I would love to visit Syria",
     "difficulty": 2
   },
