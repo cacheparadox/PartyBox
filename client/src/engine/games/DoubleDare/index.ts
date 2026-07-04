@@ -73,19 +73,59 @@ const DOUBLE_DARE: GamePlugin = {
         const currentBidder = s.biddingOrder[s.biddingIndex];
         if (playerId !== currentBidder) return { newState: s };
 
+        const newCount = data.count as number;
+        if (s.currentBid && newCount <= s.currentBid.count) {
+          return { newState: s }; // Bid must be higher
+        }
+
+        const nextIndex = (s.biddingIndex + 1) % s.biddingOrder.length;
+
         return {
           newState: {
             ...s,
+            biddingIndex: nextIndex,
             currentBid: {
               playerId,
-              count: data.count as number,
+              count: newCount,
             },
           },
         };
       }
 
+      case 'PASS_BID': {
+        const currentBidder = s.biddingOrder[s.biddingIndex];
+        if (playerId !== currentBidder) return { newState: s };
+
+        const newOrder = s.biddingOrder.filter(id => id !== playerId);
+
+        // If only 1 player remains and a bid was already made, they must perform their bid!
+        if (newOrder.length === 1 && s.currentBid) {
+          return {
+            newState: {
+              ...s,
+              biddingOrder: newOrder,
+              phase: 'gameplay',
+              phaseStartedAt: Date.now(),
+              phaseTimeoutMs: s.roundTimeLimit * 1000,
+            }
+          };
+        }
+
+        // If everyone passes (no one bid yet), maybe skip to next topic?
+        // For simplicity, just advance index if > 1 player remains.
+        const nextIndex = s.biddingIndex % Math.max(1, newOrder.length);
+
+        return {
+          newState: {
+            ...s,
+            biddingOrder: newOrder,
+            biddingIndex: nextIndex,
+          }
+        };
+      }
+
       case 'DOUBLE_DARE': {
-        if (!s.currentBid || s.currentBid.playerId === playerId) return { newState: s };
+        if (!s.currentBid) return { newState: s };
         return {
           newState: {
             ...s,

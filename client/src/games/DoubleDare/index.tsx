@@ -49,11 +49,15 @@ export default function DoubleDareView() {
     );
   }
 
-  if (state.phase === 'gameplay' && !state.currentBid) {
-    // Bidding phase
+  if (state.phase === 'gameplay' && !state.doubledBy) {
+    // Bidding phase (handles initial bid and subsequent bids)
+    const currentBidder = state.biddingOrder[state.biddingIndex];
+    const isMyBid = playerId === currentBidder;
+
     return (
       <div className={isHost ? 'host-screen' : 'player-screen items-center justify-center p-6'}>
         <div className="relative z-10 w-full max-w-2xl px-6 space-y-6 text-center animate-pop-in">
+          {/* Topic & Current Bid Status */}
           <div className="card p-8 border-yellow shadow-spray-sm bg-offblack">
             <p className="section-label mb-2">TOPIC</p>
             <p className="font-bebas text-5xl text-yellow">{state.topic}</p>
@@ -61,74 +65,63 @@ export default function DoubleDareView() {
               <span className="tag-yellow text-lg px-4 py-1">{'⭐'.repeat(state.difficulty)} DIFFICULTY</span>
               <span className="tag-cyan text-lg px-4 py-1 text-black">⏱️ {state.roundTimeLimit} SECONDS</span>
             </div>
+            
+            {state.currentBid && (
+              <div className="mt-8 pt-6 border-t border-white/10">
+                <p className="font-bebas text-white/50 text-xl">CURRENT HIGH BID:</p>
+                <p className="font-bebas text-4xl text-cyan">
+                  {players[state.currentBid.playerId]?.nickname} BIDS {state.currentBid.count}
+                </p>
+              </div>
+            )}
           </div>
-          <p className="font-bebas text-2xl text-white/70">
-            {players[currentBidder]?.nickname}'S TURN TO BID
+
+          <p className="font-bebas text-3xl text-white/90">
+            {isMyBid ? 'YOUR TURN!' : `${players[currentBidder]?.nickname}'S TURN`}
           </p>
+
           {isMyBid && (
-            <div className="card p-6 space-y-6 bg-offblack">
-              <p className="font-marker text-white/60 text-lg">How many items can you name?</p>
-              <div className="flex items-center gap-6 justify-center">
-                <button onClick={() => setBidCount(Math.max(1, bidCount - 1))}
-                  className="w-12 h-12 rounded-full border-2 border-yellow text-yellow text-2xl hover:bg-yellow hover:text-black font-bebas transition-colors">
-                  −
-                </button>
-                <span className="font-bebas text-6xl text-yellow w-20 text-center">{bidCount}</span>
-                <button onClick={() => setBidCount(bidCount + 1)}
-                  className="w-12 h-12 rounded-full border-2 border-yellow text-yellow text-2xl hover:bg-yellow hover:text-black font-bebas transition-colors">
-                  +
-                </button>
-              </div>
-              <div className="pt-4">
-                <button id="btn-submit-bid" onClick={() => sendAction('SUBMIT_BID', { count: bidCount })}
+            <div className="card p-6 space-y-6 bg-offblack border-cyan">
+              <p className="font-marker text-white/60 text-lg">What will you do?</p>
+              
+              {/* Bid Controls */}
+              <div className="space-y-4">
+                <div className="flex items-center gap-6 justify-center">
+                  <button onClick={() => setBidCount(Math.max((state.currentBid?.count || 0) + 1, bidCount - 1))}
+                    className="w-12 h-12 rounded-full border-2 border-yellow text-yellow text-2xl hover:bg-yellow hover:text-black font-bebas transition-colors">
+                    −
+                  </button>
+                  <span className="font-bebas text-6xl text-yellow w-20 text-center">{Math.max((state.currentBid?.count || 0) + 1, bidCount)}</span>
+                  <button onClick={() => setBidCount(Math.max((state.currentBid?.count || 0) + 1, bidCount) + 1)}
+                    className="w-12 h-12 rounded-full border-2 border-yellow text-yellow text-2xl hover:bg-yellow hover:text-black font-bebas transition-colors">
+                    +
+                  </button>
+                </div>
+                <button id="btn-submit-bid" onClick={() => sendAction('SUBMIT_BID', { count: Math.max((state.currentBid?.count || 0) + 1, bidCount) })}
                   className="btn-primary w-full !bg-yellow !border-yellow !text-black text-2xl py-4 animate-jitter">
-                  BID: {bidCount} ITEMS
+                  BID HIGHER: {Math.max((state.currentBid?.count || 0) + 1, bidCount)}
                 </button>
               </div>
+
+              {/* Options if there's already a bid */}
+              {state.currentBid && (
+                <div className="grid grid-cols-2 gap-4 pt-4 border-t border-white/10">
+                  <button onClick={() => sendAction('DOUBLE_DARE')}
+                    className="btn-primary py-4 text-xl !bg-magenta !border-magenta !text-white hover:animate-jitter">
+                    🎯 DOUBLE DARE!
+                  </button>
+                  <button onClick={() => sendAction('PASS_BID')}
+                    className="btn-secondary py-4 text-xl">
+                    PASS
+                  </button>
+                </div>
+              )}
             </div>
           )}
           {!isMyBid && (
-            <p className="font-marker text-white/40 text-sm animate-pulse">Watching {players[currentBidder]?.nickname} bid...</p>
-          )}
-        </div>
-      </div>
-    );
-  }
-
-  if (state.phase === 'gameplay' && state.currentBid && !state.doubledBy) {
-    // Dare decision phase
-    const bidder = players[state.currentBid.playerId];
-    return (
-      <div className={isHost ? 'host-screen' : 'player-screen items-center justify-center p-6'}>
-        <div className="relative z-10 w-full max-w-2xl px-6 space-y-6 text-center animate-pop-in">
-          <div className="card p-8 bg-offblack border-cyan shadow-cyan">
-            <p className="font-bebas text-white/70 text-2xl mb-2">
-              {bidder?.nickname} BIDS:
+            <p className="font-marker text-white/40 text-lg animate-pulse">
+              Waiting for {players[currentBidder]?.nickname} to bid, dare, or pass...
             </p>
-            <p className="font-bebas text-7xl text-cyan mb-2">
-              {state.currentBid.count} ITEMS
-            </p>
-            <p className="font-bebas text-3xl text-white/50 mb-6">IN {state.roundTimeLimit} SECONDS</p>
-            <div className="tag-cyan mx-auto inline-flex px-4 py-2">
-              TOPIC: {state.topic}
-            </div>
-          </div>
-          {playerId !== state.currentBid.playerId ? (
-            <div className="space-y-4 pt-4">
-              <p className="font-marker text-white/60 text-lg">Do you dare them?</p>
-              <button id="btn-double-dare" onClick={() => sendAction('DOUBLE_DARE')}
-                className="btn-primary w-full py-6 text-3xl !bg-magenta !border-magenta !text-white animate-jitter">
-                🎯 DOUBLE DARE!
-              </button>
-              <p className="font-grotesk text-white/40 text-sm">Or wait for {bidder?.nickname} to accept</p>
-            </div>
-          ) : (
-            <div className="pt-4">
-              <button id="btn-accept-bid" onClick={() => sendAction('ACCEPT_BID')}
-                className="btn-primary w-full py-6 text-3xl !bg-lime !border-lime !text-black animate-jitter">
-                ✅ ACCEPT MY BID
-              </button>
-            </div>
           )}
         </div>
       </div>
