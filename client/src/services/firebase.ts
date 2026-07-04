@@ -133,7 +133,8 @@ export async function callStartGame({ roomCode, gameId, selectedPacks, requestin
   await update(ref(rtdb, `rooms/${roomCode}`), { status: 'playing', gameId, gameState: newState });
 
   if (privateData) {
-    const writes = Object.entries(privateData).map(([pid, data]) => update(ref(rtdb, `private/${roomCode}/${pid}`), data));
+    // Use set() (not update()) so that arrays aren't merged into RTDB objects with numeric keys
+    const writes = Object.entries(privateData).map(([pid, data]) => set(ref(rtdb, `private/${roomCode}/${pid}`), data));
     await Promise.all(writes);
   }
 }

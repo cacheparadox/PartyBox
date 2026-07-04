@@ -63,7 +63,16 @@ export default function SlipItInView() {
 
   if (!state) return null;
 
-  const myPhrases = (privateData as { phrases?: SlipItInPhrase[] } | null)?.phrases ?? [];
+  // RTDB stores arrays as objects with numeric keys — normalize back to arrays
+  function rtdbToArray<T>(val: unknown): T[] {
+    if (!val) return [];
+    if (Array.isArray(val)) return val as T[];
+    if (typeof val === 'object') return Object.values(val as Record<string, T>);
+    return [];
+  }
+
+  const rawPhrases = (privateData as Record<string, unknown> | null)?.phrases;
+  const myPhrases: SlipItInPhrase[] = rtdbToArray<SlipItInPhrase>(rawPhrases);
   const remainingPhrases = myPhrases.filter((p) => !p.completed);
 
   // ─── Instructions ──────────────────────────────────────────────────────

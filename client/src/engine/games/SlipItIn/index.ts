@@ -65,7 +65,15 @@ const SLIP_IT_IN: GamePlugin = {
   },
 
   async handleAction(state: any, playerId: string, action: string, data: any, options: any): Promise<StateTransition> {
-    const s = state as SlipItInGameState;
+    // Normalize: old game states from Firebase may be missing new fields
+    const s: SlipItInGameState = {
+      ...state,
+      activeClaims: state.activeClaims ?? {},
+      activeVotes:  state.activeVotes  ?? {},
+      phraseDeck:   state.phraseDeck   ?? [],
+      honorRules:   state.honorRules   ?? true,
+      accusationLog: state.accusationLog ?? [],
+    };
 
     switch (action) {
       case 'START_GAME':
