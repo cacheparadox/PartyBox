@@ -12,7 +12,7 @@ function ClaimTimer({ claim, onTimeout }: { claim: SlipItInClaim; onTimeout: () 
 
   useEffect(() => {
     const tick = () => {
-      if (claim.pausedAt !== null) return; // frozen while accused
+      if (claim.pausedAt != null) return; // frozen while accused
       const elapsed = Date.now() - claim.startedAt;
       const remaining = Math.max(0, CLAIM_DURATION_MS - elapsed);
       setMsLeft(remaining);
@@ -123,7 +123,7 @@ export default function SlipItInView() {
             {myClaim ? (
               <>
                 {/* Accused — need to resolve */}
-                {myClaim.pausedAt !== null && myClaim.accusedBy !== null ? (
+                {myClaim.pausedAt != null && myClaim.accusedBy != null ? (
                   <div className="text-center space-y-5">
                     <p className="font-bebas text-magenta text-4xl animate-jitter">🚨 YOU'VE BEEN ACCUSED!</p>
                     <p className="font-grotesk text-white/80 text-base">

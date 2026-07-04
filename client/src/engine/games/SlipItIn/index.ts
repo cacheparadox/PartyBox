@@ -103,7 +103,7 @@ const SLIP_IT_IN: GamePlugin = {
 
         const privateData: Record<string, Record<string, unknown>> = {};
 
-        if (!claim || claim.pausedAt !== null) {
+        if (!claim || claim.pausedAt != null) {
           const newDeck = [...s.phraseDeck];
           const penaltyPhrase = newDeck.shift();
           
@@ -146,7 +146,7 @@ const SLIP_IT_IN: GamePlugin = {
       case 'RESOLVE_ACCUSATION': {
         const { correct } = data as { correct: boolean };
         const claim = s.activeClaims[playerId];
-        if (!claim || claim.accusedBy === null || claim.pausedAt === null) return { newState: s };
+        if (!claim || claim.accusedBy == null || claim.pausedAt == null) return { newState: s };
 
         const accuserId = claim.accusedBy;
         const newClaims = { ...s.activeClaims };
@@ -217,7 +217,8 @@ const SLIP_IT_IN: GamePlugin = {
         const newClaims = { ...s.activeClaims };
         delete newClaims[claimPlayerId];
 
-        if (s.honorRules) {
+        // honorRules defaults to true if undefined (old state)
+        if (s.honorRules ?? true) {
           const newCounts = { ...s.playerPhraseCount };
           newCounts[claimPlayerId] = Math.max(0, (newCounts[claimPlayerId] || 0) - 1);
 
