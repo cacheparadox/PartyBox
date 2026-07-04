@@ -2,13 +2,8 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     
-    // Rooms — full access for client-direct architecture
-    match /rooms/{roomCode} {
-      allow read, write: if true;
-    }
-    
-    // Players — full access for client-direct architecture
-    match /rooms/{roomCode}/players/{playerId} {
+    // Rooms — full access for client-direct architecture (including subcollections like players, playerTokens)
+    match /rooms/{document=**} {
       allow read, write: if true;
     }
     
