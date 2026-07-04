@@ -19,15 +19,28 @@ const GAME_VIEWS: Record<GameId, React.ComponentType> = {
 };
 
 export default function GamePage() {
-  const { roomCode } = useParams<{ roomCode: string }>();
+  const { roomCode: urlRoomCode } = useParams<{ roomCode: string }>();
   const navigate = useNavigate();
-  const { gameId, roomStatus, gameState } = useRoomStore();
+  const { gameId, roomStatus, roomCode, gameState } = useRoomStore();
   const { playerId, nickname } = usePlayerIdentity();
   const isHost = useRoomStore((s) => s.players[playerId ?? '']?.isHost ?? false);
 
   useEffect(() => {
-    if (roomStatus === 'lobby') navigate(`/lobby/${roomCode}`);
-  }, [roomStatus, roomCode, navigate]);
+    if (urlRoomCode && urlRoomCode !== roomCode) {
+      useRoomStore.getState().setRoomCode(urlRoomCode);
+    }
+  }, [urlRoomCode, roomCode]);
+
+  useEffect(() => {
+    // If not in a room, or identity doesn't match this room, force join
+    if (roomStatus === null && !urlRoomCode) return;
+    if (roomStatus === 'lobby') {
+      navigate(`/lobby/${urlRoomCode}`);
+    } else if (!playerId || usePlayerIdentity.getState().roomCode !== urlRoomCode) {
+      // Identity lost or mismatch -> must join
+      navigate(`/join/${urlRoomCode}`);
+    }
+  }, [roomStatus, urlRoomCode, playerId, navigate]);
 
   if (!gameId) {
     return (
