@@ -1,4 +1,4 @@
-import { AISettings } from '../../shared/src/index';
+import type { AISettings } from '../../../../shared/src/index';
 
 const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
 

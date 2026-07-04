@@ -1,6 +1,7 @@
-import { GamePlugin, GameOptions, StateTransition, createBaseState, shuffle, pickRandom } from './GamePlugin';
-import { ChameleonGameState } from '../../../shared/src/index';
-import { getContentEntries } from '../services/ContentService';
+import type { GamePlugin } from '../GamePlugin';
+import { createBaseState, shuffle, pickRandom } from '../GamePlugin';
+import type { ChameleonGameState } from '../../../../shared/src/index';
+import { getContentEntries } from '../../services/ContentService';
 
 const CLUE_TIMEOUT_MS = 30_000; // 30 seconds per clue
 const VOTE_TIMEOUT_MS = 60_000;
@@ -44,7 +45,7 @@ const CHAMELEON: GamePlugin = {
     return { newState: state, privateData };
   },
 
-  async handleAction(state, playerId, action, data, options): Promise<StateTransition> {
+  async handleAction(state: any, playerId: any, action: any, data: any, options: any): Promise<StateTransition> {
     const s = state as ChameleonGameState;
 
     switch (action) {
@@ -173,7 +174,7 @@ const CHAMELEON: GamePlugin = {
     }
   },
 
-  async handleTimeout(state, _options): Promise<StateTransition> {
+  async handleTimeout(state: any, _options: any): Promise<StateTransition> {
     const s = state as ChameleonGameState;
     if (s.phase === 'gameplay') {
       return { newState: { ...s, phase: 'voting', phaseTimeoutMs: VOTE_TIMEOUT_MS, phaseStartedAt: Date.now() } };

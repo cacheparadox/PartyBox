@@ -298,7 +298,7 @@ export interface IdentityEntry {
   name: string;
   category: string; // 'Actors' | 'Musicians' | 'Athletes' | 'Politicians' | etc.
   era: string; // '1980s', '1990s', '2000s', etc.
-  nationality: string;
+  nationality?: string;
   hintTags: string[];
 }
 

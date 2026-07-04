@@ -1,5 +1,6 @@
-import { db } from '../firebaseAdmin';
-import { ContentPackId, ContentEntry, ContentEntryType } from '../../../shared/src/index';
+import { collection, query, where, limit, getDocs } from 'firebase/firestore';
+import { db } from '../../services/firebase';
+import type { ContentPackId, ContentEntry, ContentEntryType } from '../../../../shared/src/index';
 import { DEFAULT_CONTENT } from './DefaultContent';
 
 /**
@@ -13,13 +14,12 @@ export async function getContentEntries(
   const results: ContentEntry[] = [];
 
   for (const packId of packs) {
-    const snapshot = await db
-      .collection('contentPacks')
-      .doc(packId)
-      .collection('entries')
-      .where('type', '==', type)
-      .limit(200)
-      .get();
+    const q = query(
+      collection(db, 'contentPacks', packId, 'entries'),
+      where('type', '==', type),
+      limit(200)
+    );
+    const snapshot = await getDocs(q);
 
     snapshot.forEach((doc) => {
       results.push(doc.data() as ContentEntry);

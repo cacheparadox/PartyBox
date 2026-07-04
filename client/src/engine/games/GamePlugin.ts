@@ -1,11 +1,11 @@
-import {
+import type {
   GameState,
   GameId,
   BaseGameState,
   ContentPackId,
   Player,
   AISettings,
-} from '../../../shared/src/index';
+} from '../../../../shared/src/index';
 
 export interface GameOptions {
   selectedPacks: ContentPackId[];
@@ -98,3 +98,4 @@ export function shuffle<T>(arr: T[]): T[] {
 export function pickRandom<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
 }
+

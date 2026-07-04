@@ -27,11 +27,11 @@ export default function LandingPage() {
     if (!nickname.trim()) { setError('Enter your nickname'); return; }
     setLoading(true); setError(null);
     try {
-      const { data } = await callCreateRoom({ nickname: nickname.trim() });
-      setIdentity(data.playerId, data.playerToken, nickname.trim(), data.roomCode);
-      storeRoomCode(data.roomCode);
+      const result = await callCreateRoom({ nickname: nickname.trim() });
+      setIdentity(result.playerId, result.playerToken, nickname.trim(), result.roomCode);
+      storeRoomCode(result.roomCode);
       setIsHost(true);
-      navigate(`/lobby/${data.roomCode}`);
+      navigate(`/lobby/${result.roomCode}`);
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : 'Failed to create room');
     } finally { setLoading(false); }
@@ -42,11 +42,11 @@ export default function LandingPage() {
     if (!roomCode.trim()) { setError('Enter room code'); return; }
     setLoading(true); setError(null);
     try {
-      const { data } = await callJoinRoom({
+      const result = await callJoinRoom({
         roomCode: roomCode.toUpperCase().trim(),
         nickname: nickname.trim(),
       });
-      setIdentity(data.playerId, data.playerToken, nickname.trim(), roomCode.toUpperCase().trim());
+      setIdentity(result.playerId, result.playerToken, nickname.trim(), roomCode.toUpperCase().trim());
       storeRoomCode(roomCode.toUpperCase().trim());
       setIsHost(false);
       navigate(`/lobby/${roomCode.toUpperCase().trim()}`);

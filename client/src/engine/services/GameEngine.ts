@@ -1,5 +1,5 @@
-import { GamePlugin, GameOptions, StateTransition } from '../games/GamePlugin';
-import { GameState, GameId } from '../../../shared/src/index';
+import type { GamePlugin, GameOptions, StateTransition } from '../games/GamePlugin';
+import type { GameState, GameId } from '../../../../shared/src/index';
 import DOUBLE_DARE from '../games/DoubleDare';
 import SLIP_IT_IN from '../games/SlipItIn';
 import CHAMELEON from '../games/Chameleon';

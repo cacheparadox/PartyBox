@@ -1,12 +1,13 @@
-import { GamePlugin, GameOptions, StateTransition, createBaseState, shuffle, pickRandom } from './GamePlugin';
-import { SlipItInGameState, SlipItInPhrase } from '../../../shared/src/index';
-import { getContentEntries } from '../services/ContentService';
-import * as crypto from 'crypto';
+import type { GamePlugin, GameOptions, StateTransition } from '../GamePlugin';
+import { createBaseState, shuffle, pickRandom } from '../GamePlugin';
+import type { SlipItInGameState, SlipItInPhrase } from '../../../../../shared/src/index';
+import { getContentEntries } from '../../services/ContentService';
+
 
 const PHRASES_PER_PLAYER = 3;
 
 function generatePhraseId(): string {
-  return crypto.randomBytes(4).toString('hex');
+  return Math.random().toString(36).substring(2, 10);
 }
 
 const SLIP_IT_IN: GamePlugin = {
@@ -18,7 +19,7 @@ const SLIP_IT_IN: GamePlugin = {
   estimatedDurationMinutes: 20,
   usesAI: false,
 
-  async setup(options: GameOptions): Promise<StateTransition> {
+  async setup(options: any): Promise<StateTransition> {
     const playerIds = Object.keys(options.players);
     const base = createBaseState('slip-it-in', playerIds, 1);
     const allEntries = await getContentEntries(options.selectedPacks, 'phrase');
@@ -53,7 +54,7 @@ const SLIP_IT_IN: GamePlugin = {
     return { newState: state, privateData };
   },
 
-  async handleAction(state, playerId, action, data, options): Promise<StateTransition> {
+  async handleAction(state: any, playerId: any, action: any, data: any, options: any): Promise<StateTransition> {
     const s = state as SlipItInGameState;
 
     switch (action) {
@@ -165,21 +166,22 @@ const SLIP_IT_IN: GamePlugin = {
     }
   },
 
-  async handleTimeout(state, _options): Promise<StateTransition> {
+  async handleTimeout(state: any, _options: any): Promise<StateTransition> {
     return { newState: state };
   },
 
-  getPhaseTimeout(_state) {
+  getPhaseTimeout: (_state: any) => {
     return null; // No time limit — game ends when someone completes all phrases
   },
 
-  isGameOver(state) {
+  isGameOver: (state: any) => {
     return (state as SlipItInGameState).winnerId !== null || state.phase === 'winner';
   },
 
-  getFinalScores(state) {
+  getFinalScores: (state: any) => {
     return state.scores;
   },
 };
 
 export default SLIP_IT_IN;
+

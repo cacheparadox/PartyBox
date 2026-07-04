@@ -1,11 +1,4 @@
 {
-  "functions": [
-    {
-      "source": "functions",
-      "codebase": "default",
-      "ignore": ["node_modules", ".git", "**/*.test.*"]
-    }
-  ],
   "hosting": {
     "public": "client/dist",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],

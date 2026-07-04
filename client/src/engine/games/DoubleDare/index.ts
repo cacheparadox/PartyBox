@@ -1,6 +1,7 @@
-import { GamePlugin, GameOptions, StateTransition, createBaseState, shuffle, pickRandom } from './GamePlugin';
-import { DoubleDareGameState } from '../../../shared/src/index';
-import { getContentEntries } from '../services/ContentService';
+import type { GamePlugin, GameOptions, StateTransition } from '../GamePlugin';
+import { createBaseState, shuffle, pickRandom } from '../GamePlugin';
+import type { DoubleDareGameState } from '../../../../../shared/src/index';
+import { getContentEntries } from '../../services/ContentService';
 
 const TIME_LIMIT_OPTIONS = Array.from({ length: 12 }, (_, i) => (i + 1) * 5); // 5 to 60 seconds
 
@@ -13,7 +14,7 @@ const DOUBLE_DARE: GamePlugin = {
   estimatedDurationMinutes: 15,
   usesAI: false,
 
-  async setup(options: GameOptions): Promise<StateTransition> {
+  async setup(options: any): Promise<StateTransition> {
     const playerIds = Object.keys(options.players);
     const base = createBaseState('double-dare', playerIds, playerIds.length);
     const entries = await getContentEntries(options.selectedPacks, 'topic');
@@ -39,7 +40,7 @@ const DOUBLE_DARE: GamePlugin = {
     return { newState: state };
   },
 
-  async handleAction(state, playerId, action, data, options): Promise<StateTransition> {
+  async handleAction(state: any, playerId: any, action: any, data: any, options: any): Promise<StateTransition> {
     const s = state as DoubleDareGameState;
 
     switch (action) {
@@ -193,7 +194,7 @@ const DOUBLE_DARE: GamePlugin = {
     }
   },
 
-  async handleTimeout(state, _options): Promise<StateTransition> {
+  async handleTimeout(state: any, _options: any): Promise<StateTransition> {
     const s = state as DoubleDareGameState;
     if (s.phase === 'gameplay') {
       // Time ran out — if double dared, challenger wins points
@@ -208,19 +209,20 @@ const DOUBLE_DARE: GamePlugin = {
     return { newState: s };
   },
 
-  getPhaseTimeout(state) {
+  getPhaseTimeout: (state: any) => {
     const s = state as DoubleDareGameState;
     if (s.phase === 'gameplay' && s.phaseTimeoutMs) return s.phaseTimeoutMs;
     return null;
   },
 
-  isGameOver(state) {
+  isGameOver: (state: any) => {
     return (state as DoubleDareGameState).phase === 'winner';
   },
 
-  getFinalScores(state) {
+  getFinalScores: (state: any) => {
     return state.scores;
   },
 };
 
 export default DOUBLE_DARE;
+

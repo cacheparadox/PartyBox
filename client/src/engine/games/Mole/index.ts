@@ -1,6 +1,7 @@
-import { GamePlugin, GameOptions, StateTransition, createBaseState, shuffle, pickRandom } from './GamePlugin';
-import { MoleGameState } from '../../../shared/src/index';
-import { getContentEntries } from '../services/ContentService';
+import type { GamePlugin } from '../GamePlugin';
+import { createBaseState, shuffle, pickRandom } from '../GamePlugin';
+import type { MoleGameState } from '../../../../shared/src/index';
+import { getContentEntries } from '../../services/ContentService';
 
 const MOLE: GamePlugin = {
   id: 'mole',
@@ -52,7 +53,7 @@ const MOLE: GamePlugin = {
     return { newState: state, privateData };
   },
 
-  async handleAction(state, playerId, action, data, options): Promise<StateTransition> {
+  async handleAction(state: any, playerId: any, action: any, data: any, options: any): Promise<StateTransition> {
     const s = state as MoleGameState;
 
     switch (action) {
@@ -151,7 +152,7 @@ const MOLE: GamePlugin = {
     }
   },
 
-  async handleTimeout(state, _options): Promise<StateTransition> {
+  async handleTimeout(state: any, _options: any): Promise<StateTransition> {
     const s = state as MoleGameState;
     if (s.phase === 'gameplay') return { newState: { ...s, phase: 'voting', phaseTimeoutMs: 60_000 } };
     if (s.phase === 'voting') return { newState: { ...s, phase: 'scoring', phaseTimeoutMs: 8000 } };

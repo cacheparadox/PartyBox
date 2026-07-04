@@ -98,7 +98,7 @@ export default function Lobby() {
                      <span className="ml-2 text-[10px] bg-spray text-black px-1 rounded font-bebas">HOST</span>
                   ) : (
                     <button 
-                      onClick={() => callKickPlayer({ roomCode, targetPlayerId: pid })}
+                      onClick={() => callKickPlayer({ roomCode, targetPlayerId: pid, requestingPlayerId: playerId! })}
                       className="absolute right-2 opacity-0 group-hover:opacity-100 text-magenta hover:text-white transition-opacity font-bebas text-sm bg-black/50 px-2 py-1 rounded"
                     >
                       KICK

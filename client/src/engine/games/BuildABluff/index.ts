@@ -1,8 +1,8 @@
-import { GamePlugin, GameOptions, StateTransition, createBaseState, shuffle, pickRandom } from './GamePlugin';
-import { BuildABluffGameState, BluffAnswer } from '../../../shared/src/index';
-import { getContentEntries } from '../services/ContentService';
-import { generateTriviaQuestion } from '../services/AIService';
-import * as crypto from 'crypto';
+import type { GamePlugin } from '../GamePlugin';
+import { createBaseState, shuffle, pickRandom } from '../GamePlugin';
+import type { BuildABluffGameState, BluffAnswer } from '../../../../shared/src/index';
+import { getContentEntries } from '../../services/ContentService';
+import { generateTriviaQuestion } from '../../services/AIService';
 
 const BUILD_A_BLUFF: GamePlugin = {
   id: 'build-a-bluff',
@@ -32,7 +32,7 @@ const BUILD_A_BLUFF: GamePlugin = {
     return { newState: state };
   },
 
-  async handleAction(state, playerId, action, data, options): Promise<StateTransition> {
+  async handleAction(state: any, playerId: any, action: any, data: any, options: any): Promise<StateTransition> {
     const s = state as BuildABluffGameState;
 
     switch (action) {
@@ -61,12 +61,12 @@ const BUILD_A_BLUFF: GamePlugin = {
           realAnswer = entry.answer;
         }
 
-        const realAnswerId = crypto.randomBytes(4).toString('hex');
+        const realAnswerId = Math.random().toString(36).substring(2, 10);
         const answers: BluffAnswer[] = [];
 
         if (aiBluff) {
           answers.push({
-            id: crypto.randomBytes(4).toString('hex'),
+            id: Math.random().toString(36).substring(2, 10),
             text: aiBluff,
             authorId: 'ai',
           });
@@ -96,7 +96,7 @@ const BUILD_A_BLUFF: GamePlugin = {
         if (!bluffText || s.submittedBluffs[playerId]) return { newState: s };
 
         const newAnswer: BluffAnswer = {
-          id: crypto.randomBytes(4).toString('hex'),
+          id: Math.random().toString(36).substring(2, 10),
           text: bluffText,
           authorId: playerId,
         };

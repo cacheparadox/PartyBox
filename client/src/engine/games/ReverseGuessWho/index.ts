@@ -1,8 +1,9 @@
-import { GamePlugin, GameOptions, StateTransition, createBaseState, shuffle, pickRandom } from './GamePlugin';
-import { RGWGameState, RGWQuestion } from '../../../shared/src/index';
-import { getContentEntries } from '../services/ContentService';
-import { generateIdentity } from '../services/AIService';
-import * as crypto from 'crypto';
+import type { GamePlugin, GameOptions, StateTransition } from '../GamePlugin';
+import { createBaseState, shuffle, pickRandom } from '../GamePlugin';
+import type { RGWGameState, RGWQuestion } from '../../../../../shared/src/index';
+import { getContentEntries } from '../../services/ContentService';
+import { generateIdentity } from '../../services/AIService';
+
 
 const SCORE_TABLE = [20, 16, 13, 10, 8, 6, 5, 4, 3, 2]; // points by question count
 
@@ -15,7 +16,7 @@ const REVERSE_GUESS_WHO: GamePlugin = {
   estimatedDurationMinutes: 15,
   usesAI: true,
 
-  async setup(options: GameOptions): Promise<StateTransition> {
+  async setup(options: any): Promise<StateTransition> {
     const playerIds = Object.keys(options.players);
     const base = createBaseState('reverse-guess-who', playerIds, playerIds.length);
 
@@ -38,7 +39,7 @@ const REVERSE_GUESS_WHO: GamePlugin = {
     return { newState: state };
   },
 
-  async handleAction(state, playerId, action, data, options): Promise<StateTransition> {
+  async handleAction(state: any, playerId: any, action: any, data: any, options: any): Promise<StateTransition> {
     const s = state as RGWGameState;
 
     switch (action) {
@@ -91,7 +92,7 @@ const REVERSE_GUESS_WHO: GamePlugin = {
 
       case 'ASK_QUESTION': {
         const question: RGWQuestion = {
-          id: crypto.randomBytes(4).toString('hex'),
+          id: Math.random().toString(36).substring(2, 10),
           askerId: playerId,
           text: data.question as string,
           answer: null,
@@ -197,7 +198,7 @@ const REVERSE_GUESS_WHO: GamePlugin = {
     }
   },
 
-  async handleTimeout(state, _options): Promise<StateTransition> {
+  async handleTimeout(state: any, _options: any): Promise<StateTransition> {
     const s = state as RGWGameState;
     if (s.phase === 'voting') {
       return { newState: { ...s, phase: 'scoring', phaseTimeoutMs: 8000 } };
@@ -205,17 +206,18 @@ const REVERSE_GUESS_WHO: GamePlugin = {
     return { newState: s };
   },
 
-  getPhaseTimeout(state) {
+  getPhaseTimeout: (state: any) => {
     return (state as RGWGameState).phaseTimeoutMs;
   },
 
-  isGameOver(state) {
+  isGameOver: (state: any) => {
     return state.phase === 'winner';
   },
 
-  getFinalScores(state) {
+  getFinalScores: (state: any) => {
     return state.scores;
   },
 };
 
 export default REVERSE_GUESS_WHO;
+
