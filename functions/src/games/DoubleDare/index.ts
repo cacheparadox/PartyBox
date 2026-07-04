@@ -2,7 +2,7 @@ import { GamePlugin, GameOptions, StateTransition, createBaseState, shuffle, pic
 import { DoubleDareGameState } from '../../../shared/src/index';
 import { getContentEntries } from '../services/ContentService';
 
-const TIME_LIMIT_OPTIONS = [30, 45, 60, 90]; // seconds
+const TIME_LIMIT_OPTIONS = Array.from({ length: 12 }, (_, i) => (i + 1) * 5); // 5 to 60 seconds
 
 const DOUBLE_DARE: GamePlugin = {
   id: 'double-dare',
@@ -136,7 +136,8 @@ const DOUBLE_DARE: GamePlugin = {
           const newScores = { ...s.scores };
           if (valid && nextAnswerIndex >= targetCount) {
             // Completed bid — bidder scores
-            const baseScore = targetCount * (s.difficulty * 10);
+            const timeMultiplier = (65 - s.currentBid!.timeLimit) / 10;
+            const baseScore = Math.round(targetCount * (s.difficulty * 10) * timeMultiplier);
             newScores[s.currentBid!.playerId] = (newScores[s.currentBid!.playerId] ?? 0) + baseScore;
           } else if (s.doubledBy) {
             // Failed double dare — challenger scores

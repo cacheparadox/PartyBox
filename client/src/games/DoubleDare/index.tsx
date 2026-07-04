@@ -79,17 +79,22 @@ export default function DoubleDareView() {
                   +
                 </button>
               </div>
-              <div>
+              <div className="px-4">
                 <p className="font-marker text-white/60 text-lg mb-3">In how many seconds?</p>
-                <div className="flex gap-3 justify-center">
-                  {[30, 45, 60, 90].map((t) => (
-                    <button key={t} onClick={() => setBidTime(t)}
-                      className={`px-4 py-3 rounded-none text-xl font-bebas transition-all border-2
-                        ${bidTime === t ? 'bg-yellow border-yellow text-black' : 'bg-transparent border-white/20 text-white/60 hover:border-yellow/50'}`}>
-                      {t}S
-                    </button>
-                  ))}
+                <div className="flex items-center gap-4">
+                  <span className="font-bebas text-2xl text-white/40">5S</span>
+                  <input 
+                    type="range" 
+                    min={5} 
+                    max={60} 
+                    step={5}
+                    value={bidTime}
+                    onChange={(e) => setBidTime(Number(e.target.value))}
+                    className="flex-1 h-2 bg-white/20 rounded-lg appearance-none cursor-pointer accent-[#F5E642]"
+                  />
+                  <span className="font-bebas text-2xl text-white/40">60S</span>
                 </div>
+                <p className="font-bebas text-4xl text-yellow mt-4">{bidTime} SECONDS</p>
               </div>
               <div className="pt-4">
                 <button id="btn-submit-bid" onClick={() => sendAction('SUBMIT_BID', { count: bidCount, timeLimit: bidTime })}
