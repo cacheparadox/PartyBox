@@ -5,7 +5,7 @@ export default {
     extend: {
       fontFamily: {
         bebas: ['"Bebas Neue"', 'Impact', 'sans-serif'],
-        marker: ['"Permanent Marker"', 'cursive'],
+        marker: ['"Chakra Petch"', 'sans-serif'],
         grotesk: ['"Space Grotesk"', 'system-ui', 'sans-serif'],
       },
       colors: {
