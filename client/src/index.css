@@ -1,0 +1,294 @@
+/* ─── Graffiti Fonts ─── */
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Permanent+Marker&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Base ─── */
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body, #root {
+    height: 100%;
+    background-color: #111111;
+    color: #F5F5F5;
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* Concrete noise texture via SVG filter */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+    background-repeat: repeat;
+    opacity: 1;
+  }
+
+  ::-webkit-scrollbar { width: 3px; }
+  ::-webkit-scrollbar-track { background: #111; }
+  ::-webkit-scrollbar-thumb { background: #F5E642; }
+}
+
+/* ─── Component Library ─── */
+@layer components {
+
+  /* ── Layout shells ── */
+  .host-screen {
+    @apply relative w-full min-h-dvh flex flex-col items-center justify-center overflow-hidden;
+    background-color: #111111;
+  }
+  .player-screen {
+    @apply relative w-full min-h-dvh flex flex-col;
+    max-width: 480px;
+    margin: 0 auto;
+    background-color: #111111;
+  }
+
+  /* ── Cards ── */
+  /* Standard graffiti card — chalk border, hard shadow */
+  .card {
+    background-color: #1A1A1A;
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 2px;
+    position: relative;
+  }
+
+  /* Tilted flyer — rotated slightly for chaos */
+  .card-flyer {
+    @apply card;
+    transform: rotate(-1deg);
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+  }
+  .card-flyer:hover {
+    transform: rotate(0deg) scale(1.02);
+    box-shadow: 4px 4px 0 #F5E642;
+  }
+  .card-flyer:nth-child(even) { transform: rotate(0.8deg); }
+  .card-flyer:nth-child(3n)   { transform: rotate(-1.4deg); }
+  .card-flyer:nth-child(even):hover { transform: rotate(0deg) scale(1.02); box-shadow: 4px 4px 0 #F5E642; }
+
+  /* ── Buttons ── */
+  /* Primary: solid spray yellow, black text, hard shadow */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 font-bebas tracking-wider cursor-pointer select-none;
+    background-color: #F5E642;
+    color: #111111;
+    border: 2px solid #F5E642;
+    border-radius: 2px;
+    padding: 0.75rem 2rem;
+    font-size: 1.25rem;
+    letter-spacing: 0.08em;
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.8);
+    transition: transform 0.08s, box-shadow 0.08s;
+    text-transform: uppercase;
+  }
+  .btn-primary:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 rgba(0,0,0,0.8);
+  }
+  .btn-primary:active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 rgba(0,0,0,0.8);
+  }
+  .btn-primary:disabled {
+    background-color: #3A3A2A;
+    border-color: #3A3A2A;
+    color: #666;
+    box-shadow: none;
+    transform: none;
+    cursor: not-allowed;
+  }
+
+  /* Secondary: chalk outline */
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 font-bebas tracking-wider cursor-pointer select-none;
+    background-color: transparent;
+    color: #F5F5F5;
+    border: 2px solid rgba(255,255,255,0.4);
+    border-radius: 2px;
+    padding: 0.75rem 2rem;
+    font-size: 1.25rem;
+    letter-spacing: 0.08em;
+    box-shadow: 3px 3px 0 rgba(255,255,255,0.1);
+    transition: transform 0.08s, box-shadow 0.08s, border-color 0.08s;
+    text-transform: uppercase;
+  }
+  .btn-secondary:hover {
+    border-color: rgba(255,255,255,0.8);
+    transform: translate(-2px, -2px);
+    box-shadow: 5px 5px 0 rgba(255,255,255,0.1);
+  }
+  .btn-secondary:active {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0 rgba(255,255,255,0.1);
+  }
+
+  /* Danger: magenta */
+  .btn-danger {
+    @apply btn-primary;
+    background-color: #FF2D78;
+    border-color: #FF2D78;
+    color: #fff;
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.8);
+  }
+  .btn-danger:hover { box-shadow: 6px 6px 0 rgba(0,0,0,0.8); }
+
+  /* Large modifier */
+  .btn-lg { padding: 1rem 2.5rem; font-size: 1.6rem; }
+  /* Full width */
+  .btn-full { @apply w-full; }
+
+  /* ── Room code display ── */
+  .code-display {
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: clamp(4rem, 12vw, 9rem);
+    letter-spacing: 0.15em;
+    color: #F5E642;
+    line-height: 1;
+    /* Stencil shadow */
+    text-shadow:
+      3px 3px 0 rgba(0,0,0,0.9),
+      -1px -1px 0 rgba(0,0,0,0.5);
+  }
+
+  /* ── Tags / badges ── */
+  .tag {
+    @apply inline-flex items-center font-marker;
+    padding: 0.15rem 0.6rem;
+    border-radius: 2px;
+    font-size: 0.78rem;
+    line-height: 1.6;
+    border: 1px solid currentColor;
+  }
+  .tag-yellow  { @apply tag; color: #F5E642; border-color: #F5E642; background: rgba(245,230,66,0.08); }
+  .tag-magenta { @apply tag; color: #FF2D78; border-color: #FF2D78; background: rgba(255,45,120,0.08); }
+  .tag-cyan    { @apply tag; color: #00F5FF; border-color: #00F5FF; background: rgba(0,245,255,0.08); }
+  .tag-lime    { @apply tag; color: #A8FF3E; border-color: #A8FF3E; background: rgba(168,255,62,0.08); }
+  .tag-chalk   { @apply tag; color: rgba(255,255,255,0.6); border-color: rgba(255,255,255,0.2); }
+
+  /* ── Player chip ── */
+  .player-chip {
+    @apply flex items-center gap-2;
+    background: #1A1A1A;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-left: 3px solid rgba(255,255,255,0.1);
+    padding: 0.5rem 0.75rem;
+    border-radius: 1px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.9rem;
+    transition: border-color 0.1s;
+  }
+  .player-chip-ready {
+    border-left-color: #A8FF3E;
+    background: rgba(168,255,62,0.05);
+  }
+
+  /* ── Input ── */
+  .input-field {
+    @apply w-full;
+    background: #1A1A1A;
+    border: 2px solid rgba(255,255,255,0.14);
+    border-radius: 2px;
+    color: #F5F5F5;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1rem;
+    padding: 0.75rem 1rem;
+    outline: none;
+    transition: border-color 0.1s, box-shadow 0.1s;
+  }
+  .input-field:focus {
+    border-color: #F5E642;
+    box-shadow: 3px 3px 0 rgba(245,230,66,0.3);
+  }
+  .input-field::placeholder { color: rgba(255,255,255,0.25); }
+
+  /* Code input (room code) */
+  .input-code {
+    @apply input-field text-center;
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: 2.5rem;
+    letter-spacing: 0.4em;
+    color: #F5E642;
+  }
+
+  /* ── Divider ── */
+  .divider {
+    @apply w-full flex items-center gap-3;
+    color: rgba(255,255,255,0.2);
+    font-family: 'Permanent Marker', cursive;
+    font-size: 0.75rem;
+  }
+  .divider::before, .divider::after {
+    content: '';
+    @apply flex-1;
+    height: 1px;
+    background: rgba(255,255,255,0.1);
+  }
+
+  /* ── Section header ── */
+  .section-label {
+    font-family: 'Permanent Marker', cursive;
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* ── Game phase banner (big loud text) ── */
+  .phase-banner {
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: clamp(3rem, 8vw, 6rem);
+    letter-spacing: 0.05em;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  /* ── Scoreboard row ── */
+  .score-row {
+    @apply flex items-center gap-3;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    font-family: 'Space Grotesk', sans-serif;
+  }
+  .score-row:last-child { border-bottom: none; }
+
+  /* ── Vote option (ticket stub) ── */
+  .vote-ticket {
+    @apply w-full flex items-center gap-4 cursor-pointer;
+    background: #1A1A1A;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-left: 4px solid rgba(255,255,255,0.1);
+    border-radius: 1px;
+    padding: 0.85rem 1rem;
+    font-family: 'Space Grotesk', sans-serif;
+    transition: border-color 0.08s, background 0.08s, transform 0.08s;
+  }
+  .vote-ticket:hover {
+    border-left-color: #F5E642;
+    background: rgba(245,230,66,0.04);
+    transform: translateX(3px);
+  }
+  .vote-ticket-selected {
+    border-left-color: #F5E642;
+    background: rgba(245,230,66,0.08);
+    box-shadow: inset 0 0 0 1px rgba(245,230,66,0.3);
+  }
+
+  /* ── Confetti ── */
+  .confetti-piece {
+    @apply absolute pointer-events-none;
+    animation: confettiFall 2.5s ease-in forwards;
+  }
+  @keyframes confettiFall {
+    0%   { transform: translateY(-20px) rotate(0deg) scaleX(1); opacity: 1; }
+    50%  { scaleX: -1; }
+    100% { transform: translateY(100vh) rotate(720deg) scaleX(-1); opacity: 0; }
+  }
+}
