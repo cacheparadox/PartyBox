@@ -2,21 +2,17 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     
-    // Rooms — any authenticated user can read; only valid host can write
+    // Rooms — full access for client-direct architecture
     match /rooms/{roomCode} {
-      allow read: if true;
-      allow create: if true; // anonymous room creation
-      allow update: if true; // room updates handled by Cloud Functions
-      allow delete: if false;
+      allow read, write: if true;
     }
     
-    // Players — readable by anyone with the room code
+    // Players — full access for client-direct architecture
     match /rooms/{roomCode}/players/{playerId} {
-      allow read: if true;
-      allow write: if false; // all writes via Cloud Functions
+      allow read, write: if true;
     }
     
-    // Content packs — publicly readable, admin-only write
+    // Content packs — publicly readable
     match /contentPacks/{packId} {
       allow read: if true;
       allow write: if request.auth != null && request.auth.token.admin == true;
