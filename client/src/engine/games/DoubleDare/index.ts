@@ -43,7 +43,15 @@ const DOUBLE_DARE: GamePlugin = {
   },
 
   async handleAction(state: any, playerId: any, action: any, data: any, options: any): Promise<StateTransition> {
-    const s = state as DoubleDareGameState;
+    const s: DoubleDareGameState = {
+      ...state,
+      currentBid:      state.currentBid      ?? null,
+      doubledBy:       state.doubledBy       ?? null,
+      answers:         state.answers         ?? [],
+      validationVotes: state.validationVotes ?? {},
+      phaseTimeoutMs:  state.phaseTimeoutMs  ?? null,
+      biddingOrder:    state.biddingOrder    ?? [],
+    };
 
     switch (action) {
       case 'START_ROUND': {
@@ -98,21 +106,35 @@ const DOUBLE_DARE: GamePlugin = {
 
         const newOrder = s.biddingOrder.filter(id => id !== playerId);
 
-        // If only 1 player remains and a bid was already made, they must perform their bid!
+        // If only 1 player remains and a bid was already made → bidder must perform
         if (newOrder.length === 1 && s.currentBid) {
           return {
             newState: {
               ...s,
               biddingOrder: newOrder,
-              phase: 'gameplay',
+              phase: 'performing',  // dedicated performing phase flag
               phaseStartedAt: Date.now(),
               phaseTimeoutMs: s.roundTimeLimit * 1000,
             }
           };
         }
 
-        // If everyone passes (no one bid yet), maybe skip to next topic?
-        // For simplicity, just advance index if > 1 player remains.
+        // If everyone passed with no bid → skip to next round automatically
+        if (newOrder.length === 0 && !s.currentBid) {
+          const allIds = Object.keys(options.players);
+          const nextBidding = (s.biddingIndex + 1) % allIds.length;
+          return {
+            newState: {
+              ...s,
+              phase: 'scoring',
+              biddingOrder: shuffle(allIds),
+              biddingIndex: nextBidding,
+              currentBid: null,
+              phaseTimeoutMs: 3000,
+            }
+          };
+        }
+
         const nextIndex = s.biddingIndex % Math.max(1, newOrder.length);
 
         return {
@@ -130,7 +152,7 @@ const DOUBLE_DARE: GamePlugin = {
           newState: {
             ...s,
             doubledBy: playerId,
-            phase: 'gameplay',
+            phase: 'performing',
             phaseStartedAt: Date.now(),
             phaseTimeoutMs: s.roundTimeLimit * 1000,
           },
@@ -143,7 +165,7 @@ const DOUBLE_DARE: GamePlugin = {
         return {
           newState: {
             ...s,
-            phase: 'gameplay',
+            phase: 'performing',
             phaseStartedAt: Date.now(),
             phaseTimeoutMs: s.roundTimeLimit * 1000,
           },
@@ -255,7 +277,8 @@ const DOUBLE_DARE: GamePlugin = {
 
   getPhaseTimeout: (state: any) => {
     const s = state as DoubleDareGameState;
-    if (s.phase === 'gameplay' && s.phaseTimeoutMs) return s.phaseTimeoutMs;
+    if (s.phase === 'performing' && s.phaseTimeoutMs) return s.phaseTimeoutMs;
+    if (s.phase === 'scoring' && s.phaseTimeoutMs) return s.phaseTimeoutMs;
     return null;
   },
 

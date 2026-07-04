@@ -29,8 +29,9 @@ export default function ReverseGuessWhoView() {
   const myPrivate = privateData as { identity?: string } | null;
   const isHolder = playerId === state.identityHolderId;
   const isBuzzer = playerId === state.buzzerId;
-  const mySkipVote = state.skipVotes[playerId ?? ''];
-  const unansweredQ = state.questions.filter((q) => q.answer === null && q.askerId !== state.identityHolderId);
+  const mySkipVote = state.skipVotes?.[playerId ?? ''];
+  // Firebase drops null → comes back as undefined; use != null
+  const unansweredQ = (state.questions ?? []).filter((q) => q.answer == null && q.askerId !== state.identityHolderId);
 
   if (state.phase === 'instructions') {
     return (
@@ -88,12 +89,17 @@ export default function ReverseGuessWhoView() {
                   {state.buzzerGuess && (
                     <div className="mt-4 space-y-4">
                       <p className="text-white font-grotesk text-lg">Guessing: <strong className="text-spray text-xl">{state.buzzerGuess}</strong></p>
-                      <div className="flex gap-3 justify-center">
-                        <button id="btn-correct" onClick={() => sendAction('CONFIRM_GUESS', { correct: true })}
-                          className="btn-primary flex-1">✅ CORRECT</button>
-                        <button id="btn-wrong" onClick={() => sendAction('CONFIRM_GUESS', { correct: false })}
-                          className="btn-secondary text-magenta border-magenta flex-1">❌ WRONG</button>
-                      </div>
+                      {/* Identity holder confirms — they include their identity so it gets revealed */}
+                      {isHolder ? (
+                        <div className="flex gap-3 justify-center">
+                          <button id="btn-correct" onClick={() => sendAction('CONFIRM_GUESS', { correct: true, revealedIdentity: myPrivate?.identity ?? '' })}
+                            className="btn-primary flex-1">✅ CORRECT</button>
+                          <button id="btn-wrong" onClick={() => sendAction('CONFIRM_GUESS', { correct: false, revealedIdentity: myPrivate?.identity ?? '' })}
+                            className="btn-secondary text-magenta border-magenta flex-1">❌ WRONG</button>
+                        </div>
+                      ) : isHost ? (
+                        <p className="font-marker text-white/40 text-sm">Waiting for {players[state.identityHolderId]?.nickname} to confirm...</p>
+                      ) : null}
                     </div>
                   )}
                 </div>

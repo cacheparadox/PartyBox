@@ -33,7 +33,15 @@ const BUILD_A_BLUFF: GamePlugin = {
   },
 
   async handleAction(state: any, playerId: any, action: any, data: any, options: any): Promise<StateTransition> {
-    const s = state as BuildABluffGameState;
+    const s: BuildABluffGameState = {
+      ...state,
+      answers:        state.answers        ?? [],
+      votes:          state.votes          ?? {},
+      submittedBluffs: state.submittedBluffs ?? {},
+      phaseTimeoutMs: state.phaseTimeoutMs ?? null,
+      realAnswerId:   state.realAnswerId   ?? '',
+      question:       state.question       ?? '',
+    };
 
     switch (action) {
       case 'START_ROUND': {
@@ -196,7 +204,7 @@ const BUILD_A_BLUFF: GamePlugin = {
   },
 
   getPhaseTimeout(state) {
-    return (state as BuildABluffGameState).phaseTimeoutMs;
+    return (state as BuildABluffGameState).phaseTimeoutMs ?? null;
   },
 
   isGameOver(state) {

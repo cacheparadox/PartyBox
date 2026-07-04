@@ -59,9 +59,9 @@ export default function ChameleonView() {
 
   // ── Gameplay Phase (clue submission) ──
   if (state.phase === 'gameplay' || state.phase === 'round-start') {
-    const myClue = state.clueGrid.find((c) => c.playerId === playerId);
-    const submitted = myClue?.clue !== null;
-    const submittedCount = state.clueGrid.filter((c) => c.clue !== null).length;
+    const myClue = (state.clueGrid ?? []).find((c) => c.playerId === playerId);
+    const submitted = myClue?.clue != null;
+    const submittedCount = (state.clueGrid ?? []).filter((c) => c.clue != null).length;
 
     return (
       <div className={isHost ? 'host-screen' : 'player-screen items-center justify-center p-6'}>
@@ -181,7 +181,11 @@ export default function ChameleonView() {
                     <button
                       key={c.playerId}
                       id={`vote-${c.playerId}`}
-                      onClick={() => !myVote && sendAction('VOTE', { targetId: c.playerId })}
+                      onClick={() => !myVote && sendAction('VOTE', {
+                        targetId: c.playerId,
+                        // Non-chameleons know the word — pass it so engine can reveal it
+                        correctWord: isChameleon ? '' : (myPrivate?.word ?? ''),
+                      })}
                       disabled={!!myVote}
                       className={`vote-ticket justify-between items-center
                         ${voted ? 'border-magenta bg-magenta/10' : ''}`}
@@ -206,7 +210,30 @@ export default function ChameleonView() {
     );
   }
 
-  // ── Scoring/Reveal Phase ──
+  // ── Chameleon Guess Phase ──
+  if (state.phase === 'chameleon-guess') {
+    return (
+      <div className={isHost ? 'host-screen' : 'player-screen items-center justify-center p-6'}>
+        <div className="relative z-10 w-full max-w-lg px-6 text-center space-y-6 animate-pop-in">
+          <p className="text-6xl">🦎</p>
+          <h2 className="phase-banner text-magenta">CHAMELEON CAUGHT!</h2>
+          <p className="font-grotesk text-white/60 text-lg">
+            <strong className="text-spray">{players[state.chameleonId]?.nickname}</strong> must guess the secret word to save themselves!
+          </p>
+          {isChameleon ? (
+            <ChameleonGuessInput onSubmit={(g) => sendAction('CHAMELEON_GUESS', { guess: g })} />
+          ) : (
+            <div className="card p-6 bg-offblack border-yellow">
+              <p className="font-marker text-white/60 text-sm mb-2">The secret word was:</p>
+              <p className="font-bebas text-4xl text-lime">{state.revealedWord ?? '???'}</p>
+              <p className="font-marker text-white/40 text-sm mt-3 animate-pulse">Waiting for chameleon's guess...</p>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   if (state.phase === 'scoring') {
     const sortedPlayers = Object.values(players).sort(
       (a, b) => (state.scores[b.id] ?? 0) - (state.scores[a.id] ?? 0)
@@ -233,6 +260,21 @@ export default function ChameleonView() {
               </div>
             ))}
           </div>
+
+          {state.revealedWord && (
+            <div className="card p-4 bg-offblack border-lime/30 text-center max-w-md mx-auto">
+              <p className="font-marker text-white/40 text-sm">The secret word was:</p>
+              <p className="font-bebas text-3xl text-lime">{state.revealedWord}</p>
+              {state.chameleonGuess && (
+                <p className={`font-bebas text-xl mt-2 ${
+                  state.chameleonGuess.toLowerCase().trim() === (state.revealedWord ?? '').toLowerCase().trim()
+                    ? 'text-lime' : 'text-magenta'
+                }`}>
+                  {chameleonPlayer?.nickname} guessed: "{state.chameleonGuess}"
+                </p>
+              )}
+            </div>
+          )}
 
           {isHost && (
             <button onClick={() => sendAction('NEXT_ROUND')} className="btn-primary btn-lg btn-full">
@@ -296,3 +338,29 @@ function ClueInput({ onSubmit }: { onSubmit: (clue: string) => void }) {
     </div>
   );
 }
+
+function ChameleonGuessInput({ onSubmit }: { onSubmit: (guess: string) => void }) {
+  const [guess, setGuess] = useState('');
+  return (
+    <div className="card p-6 space-y-4 bg-offblack shadow-magenta border-magenta">
+      <p className="font-marker text-white/60 text-sm text-center">What was the secret word?</p>
+      <input
+        id="input-chameleon-guess"
+        className="input-field text-center font-bebas text-2xl"
+        placeholder="GUESS THE WORD..."
+        value={guess}
+        onChange={(e) => setGuess(e.target.value)}
+        maxLength={40}
+      />
+      <button
+        id="btn-chameleon-guess"
+        onClick={() => { if (guess.trim()) onSubmit(guess.trim()); }}
+        disabled={!guess.trim()}
+        className="btn-primary w-full !bg-magenta !border-magenta"
+      >
+        SUBMIT GUESS
+      </button>
+    </div>
+  );
+}
+

@@ -90,24 +90,29 @@ const CHAMELEON: GamePlugin = {
         const newScores = { ...s.scores };
 
         if (mostVoted === s.chameleonId) {
-          // Chameleon caught — chameleon gets one last chance to guess word
+          // Chameleon caught — transition to 'chameleon-guess' phase
+          // The correct word is sent by the voting player in data.correctWord (non-chameleons know it)
+          const revealedWord = (data.correctWord as string | undefined) ?? null;
           return {
             newState: {
               ...s,
               votes,
-              phase: 'voting', // chameleon guesses
+              revealedWord,
+              phase: 'chameleon-guess',
               phaseTimeoutMs: 30_000,
+              phaseStartedAt: Date.now(),
             },
           };
         } else {
-          // Chameleon escapes — chameleon scores, others lose points
+          // Chameleon escapes — chameleon scores
+          const revealedWord = (data.correctWord as string | undefined) ?? null;
           newScores[s.chameleonId] = (newScores[s.chameleonId] ?? 0) + 20;
           return {
             newState: {
               ...s,
               votes,
               scores: newScores,
-              revealedWord: null,
+              revealedWord,
               phase: 'scoring',
               phaseTimeoutMs: 6000,
             },
@@ -117,27 +122,26 @@ const CHAMELEON: GamePlugin = {
 
       case 'CHAMELEON_GUESS': {
         if (playerId !== s.chameleonId) return { newState: s };
-        const guess = data.guess as string;
-        const entries = await getContentEntries(options.selectedPacks, 'word-category');
-        const entry = entries.find((e) => (e as { word: string }).word === s.revealedWord ?? '');
-        const correct = entry && guess.toLowerCase().trim() === (entry as { word: string }).word.toLowerCase().trim();
+        const guess = (data.guess as string).toLowerCase().trim();
+        // The correct word is stored in revealedWord (set when voting completed)
+        const correctWord = (s.revealedWord ?? '').toLowerCase().trim();
+        const correct = guess.length > 0 && guess === correctWord;
 
         const newScores = { ...s.scores };
         if (correct) {
+          // Chameleon guessed correctly — still scores points
           newScores[s.chameleonId] = (newScores[s.chameleonId] ?? 0) + 10;
         } else {
-          // Correct word revealed, non-chameleons score
+          // Failed — non-chameleons score
           Object.keys(s.scores).forEach((id) => {
-            if (id !== s.chameleonId) {
-              newScores[id] = (newScores[id] ?? 0) + 5;
-            }
+            if (id !== s.chameleonId) newScores[id] = (newScores[id] ?? 0) + 5;
           });
         }
 
         return {
           newState: {
             ...s,
-            chameleonGuess: guess,
+            chameleonGuess: data.guess as string,
             scores: newScores,
             phase: 'scoring',
             phaseTimeoutMs: 6000,
