@@ -1,5 +1,6 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { callSetReady, callStartGame, callKickPlayer, callUpdateAISettings } from '../../services/firebase';
 import { useRoomStore, usePlayerIdentity, useUIStore } from '../../stores';
 import type { GameId } from '../../../../shared/src/index';
@@ -14,9 +15,23 @@ const GAMES = [
 ];
 
 export default function Lobby() {
-  const { roomCode, hostId, gameId, players } = useRoomStore();
+  const { roomCode: urlRoomCode } = useParams<{ roomCode: string }>();
+  const { roomCode, roomStatus, hostId, gameId, players, setRoomCode } = useRoomStore();
   const { playerId } = usePlayerIdentity();
   const { setError, setLoading } = useUIStore();
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    if (urlRoomCode && urlRoomCode !== roomCode) {
+      setRoomCode(urlRoomCode);
+    }
+  }, [urlRoomCode, roomCode, setRoomCode]);
+  
+  useEffect(() => {
+    if (roomStatus === 'playing' && roomCode) {
+      navigate(`/game/${roomCode}`);
+    }
+  }, [roomStatus, roomCode, navigate]);
   
   const isHost = playerId === hostId;
   const [selectedGame, setSelectedGame] = useState<GameId>(gameId || 'chameleon');
