@@ -22,6 +22,7 @@ export default function App() {
       <AnimatePresence mode="wait">
         <Routes>
           <Route path="/" element={<LandingPage />} />
+          <Route path="/join/:roomCode" element={<LandingPage />} />
           <Route path="/lobby/:roomCode" element={<LobbyPage />} />
           <Route path="/game/:roomCode" element={<GamePage />} />
           <Route path="/admin" element={<AdminPage />} />

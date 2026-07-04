@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { callCreateRoom, callJoinRoom } from '../../services/firebase';
 import { useRoomStore, usePlayerIdentity, useUIStore } from '../../stores';
 
@@ -16,9 +16,10 @@ const GAME_CARDS = [
 
 export default function LandingPage() {
   const navigate = useNavigate();
-  const [view, setView] = useState<View>('home');
+  const { roomCode: initialRoomCode } = useParams<{ roomCode?: string }>();
+  const [view, setView] = useState<View>(initialRoomCode ? 'join' : 'home');
   const [nickname, setNickname] = useState('');
-  const [roomCode, setRoomCode] = useState('');
+  const [roomCode, setRoomCode] = useState(initialRoomCode || '');
   const { setIdentity } = usePlayerIdentity();
   const { setRoomCode: storeRoomCode } = useRoomStore();
   const { isLoading, error, setLoading, setError, setIsHost } = useUIStore();

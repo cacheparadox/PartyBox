@@ -166,7 +166,7 @@ export default function Lobby() {
               <button 
                 onClick={handleStart} 
                 disabled={activePlayers.length < (GAMES.find(g => g.id === selectedGame)?.minPlayers || 2)} 
-                className="btn-primary btn-lg btn-full text-2xl animate-jitter"
+                className="btn-primary btn-lg btn-full text-2xl hover:animate-jitter"
               >
                 START {GAMES.find(g => g.id === selectedGame)?.name.toUpperCase() || 'GAME'}
               </button>
