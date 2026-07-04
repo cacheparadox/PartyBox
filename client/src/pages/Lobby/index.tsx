@@ -77,12 +77,21 @@ export default function Lobby() {
     }
   }
 
+  const error = useUIStore(s => s.error);
+
   if (!roomCode) return <div className="host-screen"><div className="font-bebas text-4xl text-spray animate-pulse">LOADING ROOM...</div></div>;
+
+  const errorDisplay = error && (
+    <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-magenta text-white px-4 py-2 rounded shadow-magenta font-bebas z-50 animate-pop-in">
+      {error}
+    </div>
+  );
 
   // ─── HOST VIEW ───
   if (isHost) {
     return (
       <div className="host-screen p-8">
+        {errorDisplay}
         <div className="w-full max-w-7xl mx-auto grid grid-cols-12 gap-8 items-start h-full">
           
           {/* Left Col: Players */}

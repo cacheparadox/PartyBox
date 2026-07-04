@@ -18,14 +18,16 @@ const DOUBLE_DARE: GamePlugin = {
     const playerIds = Object.keys(options.players);
     const base = createBaseState('double-dare', playerIds, playerIds.length);
     const entries = await getContentEntries(options.selectedPacks, 'topic');
-    const topic = entries.length > 0 ? pickRandom(entries) : { topic: 'Animals', difficulty: 1 };
+    const topicEntry = entries.length > 0 ? pickRandom(entries) : { topic: 'Animals', difficulty: 1 };
+    const topicString = (topicEntry as any).topic || (topicEntry as any).text || 'Animals';
+    const topicDiff = (topicEntry as any).difficulty ?? 1;
 
     const state: DoubleDareGameState = {
       ...base,
       phase: 'instructions',
       gameId: 'double-dare',
-      topic: (topic as { topic: string }).topic,
-      difficulty: ((topic as { difficulty: number }).difficulty ?? 1) as 1 | 2 | 3,
+      topic: topicString,
+      difficulty: topicDiff as 1 | 2 | 3,
       roundTimeLimit: pickRandom(TIME_LIMIT_OPTIONS) as number,
       currentBid: null,
       doubledBy: null,
@@ -47,13 +49,15 @@ const DOUBLE_DARE: GamePlugin = {
       case 'START_ROUND': {
         // Host advances from instructions → bidding
         const entries = await getContentEntries(options.selectedPacks, 'topic');
-        const topic = entries.length > 0 ? pickRandom(entries) : { topic: 'Animals', difficulty: 1 };
+        const topicEntry = entries.length > 0 ? pickRandom(entries) : { topic: 'Animals', difficulty: 1 };
+        const topicString = (topicEntry as any).topic || (topicEntry as any).text || 'Animals';
+        const topicDiff = (topicEntry as any).difficulty ?? 1;
         return {
           newState: {
             ...s,
             phase: 'gameplay',
-            topic: (topic as { topic: string }).topic,
-            difficulty: ((topic as { difficulty: number }).difficulty ?? 1) as 1 | 2 | 3,
+            topic: topicString,
+            difficulty: topicDiff as 1 | 2 | 3,
             roundTimeLimit: pickRandom(TIME_LIMIT_OPTIONS) as number,
             currentBid: null,
             doubledBy: null,
