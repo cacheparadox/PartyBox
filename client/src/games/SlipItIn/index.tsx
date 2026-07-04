@@ -66,7 +66,7 @@ export default function SlipItInView() {
             <div className="card p-6 bg-offblack">
               <p className="section-label text-white/50 mb-4">RECENT ACCUSATIONS</p>
               <div className="space-y-3 font-grotesk">
-                {state.accusationLog.slice(-5).reverse().map((log, i) => (
+                {(state.accusationLog || []).slice(-5).reverse().map((log, i) => (
                   <div key={i} className={`flex items-center gap-2 py-2 border-b border-white/5 last:border-0`}>
                     <span className={log.correct ? 'text-lime' : 'text-magenta'}>
                       {log.correct ? '✅' : '❌'}
@@ -77,7 +77,7 @@ export default function SlipItInView() {
                   </div>
                 ))}
               </div>
-              {state.accusationLog.length === 0 && <p className="font-grotesk text-white/30 text-sm">No accusations yet...</p>}
+              {(!state.accusationLog || state.accusationLog.length === 0) && <p className="font-grotesk text-white/30 text-sm">No accusations yet...</p>}
             </div>
           </div>
         ) : (

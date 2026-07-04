@@ -50,7 +50,7 @@ export function usePrivateDataSubscription(roomCode: string | null, playerId: st
     if (!roomCode || !playerId) return;
 
     const unsubscribe = subscribeToPath<Record<string, unknown>>(
-      `rooms/${roomCode}/privatePlayerData/${playerId}`,
+      `private/${roomCode}/${playerId}`,
       (data) => {
         if (data) setPrivateData(data);
       }
