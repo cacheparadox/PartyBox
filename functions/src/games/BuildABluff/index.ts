@@ -8,7 +8,7 @@ const BUILD_A_BLUFF: GamePlugin = {
   id: 'build-a-bluff',
   name: 'Build a Bluff',
   description: 'Fool others with your fake answers. Find the truth among the lies.',
-  minPlayers: 3,
+  minPlayers: 2,
   maxPlayers: 12,
   estimatedDurationMinutes: 15,
   usesAI: true,

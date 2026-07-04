@@ -13,7 +13,7 @@ const SLIP_IT_IN: GamePlugin = {
   id: 'slip-it-in',
   name: 'Slip It In',
   description: 'Secretly weave phrases into conversation. Catch others doing the same.',
-  minPlayers: 4,
+  minPlayers: 2,
   maxPlayers: 12,
   estimatedDurationMinutes: 20,
   usesAI: false,

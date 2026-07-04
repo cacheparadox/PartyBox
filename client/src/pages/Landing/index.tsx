@@ -111,7 +111,7 @@ export default function LandingPage() {
 
             {/* Tags */}
             <div className="mt-16 flex flex-wrap gap-3 justify-center">
-              <span className="tag-yellow">4–12 Players</span>
+              <span className="tag-yellow">2–12 Players</span>
               <span className="tag-cyan">No Account Needed</span>
               <span className="tag-magenta">Phone as Controller</span>
               <span className="tag-lime">AI-Powered</span>

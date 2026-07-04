@@ -77,7 +77,8 @@
   /* ── Buttons ── */
   /* Primary: solid spray yellow, black text, hard shadow */
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 font-bebas tracking-wider cursor-pointer select-none;
+    @apply inline-flex items-center justify-center gap-2 tracking-wider cursor-pointer select-none;
+    font-family: 'Bebas Neue', Impact, sans-serif;
     background-color: #F5E642;
     color: #111111;
     border: 2px solid #F5E642;
@@ -108,7 +109,8 @@
 
   /* Secondary: chalk outline */
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 font-bebas tracking-wider cursor-pointer select-none;
+    @apply inline-flex items-center justify-center gap-2 tracking-wider cursor-pointer select-none;
+    font-family: 'Bebas Neue', Impact, sans-serif;
     background-color: transparent;
     color: #F5F5F5;
     border: 2px solid rgba(255,255,255,0.4);
@@ -160,7 +162,8 @@
 
   /* ── Tags / badges ── */
   .tag {
-    @apply inline-flex items-center font-marker;
+    @apply inline-flex items-center;
+    font-family: 'Permanent Marker', cursive;
     padding: 0.15rem 0.6rem;
     border-radius: 2px;
     font-size: 0.78rem;

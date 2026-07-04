@@ -8,7 +8,7 @@ const DOUBLE_DARE: GamePlugin = {
   id: 'double-dare',
   name: 'Double Dare',
   description: 'Bid how many items you can name. Dare someone to prove it.',
-  minPlayers: 3,
+  minPlayers: 2,
   maxPlayers: 12,
   estimatedDurationMinutes: 15,
   usesAI: false,

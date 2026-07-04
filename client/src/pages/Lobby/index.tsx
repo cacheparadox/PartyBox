@@ -5,12 +5,12 @@ import { useRoomStore, usePlayerIdentity, useUIStore } from '../../stores';
 import type { GameId } from '../../../../shared/src/index';
 
 const GAMES = [
-  { id: 'double-dare', name: 'Double Dare', emoji: '🎯', desc: 'Bid items', players: '3-12', ai: false },
-  { id: 'slip-it-in', name: 'Slip It In', emoji: '🤫', desc: 'Secret phrases', players: '4-12', ai: false },
-  { id: 'chameleon', name: 'Chameleon', emoji: '🦎', desc: 'Blend in', players: '3-10', ai: false },
-  { id: 'mole', name: 'Mole', emoji: '🕵️', desc: 'Find the mole', players: '4-10', ai: false },
-  { id: 'build-a-bluff', name: 'Build a Bluff', emoji: '🎭', desc: 'Fake trivia', players: '3-12', ai: true },
-  { id: 'reverse-guess-who', name: 'Reverse Guess Who', emoji: '🌟', desc: 'Find identity', players: '3-12', ai: true },
+  { id: 'double-dare', name: 'Double Dare', emoji: '🎯', desc: 'Bid items', players: '2-12', minPlayers: 2, ai: false },
+  { id: 'slip-it-in', name: 'Slip It In', emoji: '🤫', desc: 'Secret phrases', players: '2-12', minPlayers: 2, ai: false },
+  { id: 'chameleon', name: 'Chameleon', emoji: '🦎', desc: 'Blend in', players: '3-10', minPlayers: 3, ai: false },
+  { id: 'mole', name: 'Mole', emoji: '🕵️', desc: 'Find the mole', players: '3-10', minPlayers: 3, ai: false },
+  { id: 'build-a-bluff', name: 'Build a Bluff', emoji: '🎭', desc: 'Fake trivia', players: '2-12', minPlayers: 2, ai: true },
+  { id: 'reverse-guess-who', name: 'Reverse Guess Who', emoji: '🌟', desc: 'Find identity', players: '2-12', minPlayers: 2, ai: true },
 ];
 
 export default function Lobby() {
@@ -163,7 +163,11 @@ export default function Lobby() {
             </div>
 
             <div className="w-full mt-8">
-              <button onClick={handleStart} disabled={activePlayers.length < 3} className="btn-primary btn-lg btn-full text-2xl animate-jitter">
+              <button 
+                onClick={handleStart} 
+                disabled={activePlayers.length < (GAMES.find(g => g.id === selectedGame)?.minPlayers || 2)} 
+                className="btn-primary btn-lg btn-full text-2xl animate-jitter"
+              >
                 START {GAMES.find(g => g.id === selectedGame)?.name.toUpperCase() || 'GAME'}
               </button>
             </div>

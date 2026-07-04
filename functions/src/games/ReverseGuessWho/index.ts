@@ -10,7 +10,7 @@ const REVERSE_GUESS_WHO: GamePlugin = {
   id: 'reverse-guess-who',
   name: 'Reverse Guess Who',
   description: 'One player holds a secret identity. Others ask yes/no questions to find out who.',
-  minPlayers: 3,
+  minPlayers: 2,
   maxPlayers: 12,
   estimatedDurationMinutes: 15,
   usesAI: true,

@@ -6,7 +6,7 @@ const MOLE: GamePlugin = {
   id: 'mole',
   name: 'Mole',
   description: 'Most players share a word. One player unknowingly has a different one.',
-  minPlayers: 4,
+  minPlayers: 3,
   maxPlayers: 10,
   estimatedDurationMinutes: 15,
   usesAI: false,
