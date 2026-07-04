@@ -197,26 +197,10 @@ export interface BuildABluffGameState extends BaseGameState {
 // Reverse Guess Who
 // ─────────────────────────────────────────────
 
-export interface RGWQuestion {
-  id: string;
-  askerId: string;
-  text: string;
-  answer: 'yes' | 'no' | null;
-  answeredAt: number | null;
-}
-
 export interface RGWGameState extends BaseGameState {
   gameId: 'reverse-guess-who';
-  identityHolderId: string;
-  identityCategory: string;
-  // identity name sent only to identityHolderId privately
-  questions: RGWQuestion[];
-  skipVotes: Record<string, boolean>; // playerId → voted to skip
-  skipsUsed: number;
-  buzzerId: string | null; // who buzzed to guess
-  buzzerGuess: string | null;
-  revealed: boolean;
-  revealedIdentity: string | null;
+  identities: Record<string, { name: string; category: string }>;
+  completed: Record<string, 'correct' | 'pass'>;
 }
 
 // ─────────────────────────────────────────────

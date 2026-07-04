@@ -1,37 +1,28 @@
 import type { GamePlugin, GameOptions, StateTransition } from '../GamePlugin';
-import { createBaseState, shuffle, pickRandom } from '../GamePlugin';
-import type { RGWGameState, RGWQuestion } from '../../../../../shared/src/index';
+import { createBaseState, pickRandom } from '../GamePlugin';
+import type { RGWGameState } from '../../../../../shared/src/index';
 import { getContentEntries } from '../../services/ContentService';
 import { generateIdentity } from '../../services/AIService';
-
-const SCORE_TABLE = [20, 16, 13, 10, 8, 6, 5, 4, 3, 2]; // points by question count
 
 const REVERSE_GUESS_WHO: GamePlugin = {
   id: 'reverse-guess-who',
   name: 'Reverse Guess Who',
-  description: 'One player holds a secret identity. Others ask yes/no questions to find out who.',
+  description: 'Put your phone on your forehead! Everyone gets a secret celebrity identity and must ask yes/no questions to figure out who they are.',
   minPlayers: 2,
   maxPlayers: 12,
-  estimatedDurationMinutes: 15,
+  estimatedDurationMinutes: 10,
   usesAI: true,
 
   async setup(options: any): Promise<StateTransition> {
     const playerIds = Object.keys(options.players);
-    const base = createBaseState('reverse-guess-who', playerIds, playerIds.length);
+    const base = createBaseState('reverse-guess-who', playerIds, playerIds.length); // 1 round per player effectively, or just default rounds
 
     const state: RGWGameState = {
       ...base,
       gameId: 'reverse-guess-who',
       phase: 'instructions',
-      identityHolderId: '',
-      identityCategory: '',
-      questions: [],
-      skipVotes: {},
-      skipsUsed: 0,
-      buzzerId: null,
-      buzzerGuess: null,
-      revealed: false,
-      revealedIdentity: null,
+      identities: {},
+      completed: {},
       phaseTimeoutMs: null,
     };
 
@@ -39,156 +30,74 @@ const REVERSE_GUESS_WHO: GamePlugin = {
   },
 
   async handleAction(state: any, playerId: any, action: any, data: any, options: any): Promise<StateTransition> {
-    // Normalize: Firebase drops null → undefined; restore safe defaults
-    const s: RGWGameState = {
+    const s = {
       ...state,
-      questions:        state.questions        ?? [],
-      skipVotes:        state.skipVotes        ?? {},
-      buzzerId:         state.buzzerId         ?? null,
-      buzzerGuess:      state.buzzerGuess      ?? null,
-      revealedIdentity: state.revealedIdentity ?? null,
-      phaseTimeoutMs:   state.phaseTimeoutMs   ?? null,
-      revealed:         state.revealed         ?? false,
-      skipsUsed:        state.skipsUsed        ?? 0,
-    };
+      identities: state.identities ?? {},
+      completed: state.completed ?? {},
+      phaseTimeoutMs: state.phaseTimeoutMs ?? null,
+    } as RGWGameState;
 
     switch (action) {
       case 'START_ROUND': {
         const playerIds = Object.keys(s.scores);
-        // Rotate identity holder each round
-        const holderIndex = (s.round - 1) % playerIds.length;
-        const identityHolderId = playerIds[holderIndex];
-
-        // Get identity (AI or curated)
-        let identity = { name: '', category: 'Actors', nationality: 'American', era: '2000s', hintTags: [] as string[] };
+        const identities: Record<string, { name: string; category: string }> = {};
+        
+        // Fetch pool of identities
         const entries = await getContentEntries(options.selectedPacks, 'identity');
+        const cats = ['Actors', 'Musicians', 'Athletes', 'Politicians', 'Comedians', 'Fictional Characters'];
 
-        if (options.aiSettings?.apiKey && entries.length < 5) {
-          const cats = ['Actors', 'Musicians', 'Athletes', 'Politicians', 'Comedians'];
-          const cat = pickRandom(cats);
-          const ai = await generateIdentity(options.aiSettings, cat);
-          if (ai) identity = ai;
+        for (const pid of playerIds) {
+          let identity = { name: '', category: '', nationality: '', era: '', hintTags: [] as string[] };
+          
+          if (options.aiSettings?.apiKey && entries.length < 5) {
+            const ai = await generateIdentity(options.aiSettings, pickRandom(cats));
+            if (ai) identity = ai;
+          }
+
+          if (!identity.name) {
+            if (entries.length > 0) {
+               identity = pickRandom(entries) as any;
+            } else {
+               identity = { name: 'Brad Pitt', category: 'Actors', nationality: 'American', era: '2000s', hintTags: [] };
+            }
+          }
+
+          identities[pid] = { name: identity.name, category: identity.category || 'Celebrity' };
         }
-
-        if (!identity.name) {
-          const entry = pickRandom(entries) as {
-            name: string; category: string; nationality: string; era: string; hintTags: string[];
-          };
-          identity = entry;
-        }
-
-        const privateData: Record<string, Record<string, unknown>> = {
-          [identityHolderId]: { identity: identity.name },
-        };
 
         return {
           newState: {
             ...s,
-            phase: 'gameplay',
-            identityHolderId,
-            identityCategory: identity.category,
-            questions: [],
-            skipVotes: {},
-            buzzerId: null,
-            buzzerGuess: null,
-            revealed: false,
-            revealedIdentity: null,
+            phase: 'countdown',
+            identities,
+            completed: {},
             phaseStartedAt: Date.now(),
-            phaseTimeoutMs: null,
+            phaseTimeoutMs: 10000, // 10 second countdown
           },
-          privateData,
         };
       }
 
-      case 'ASK_QUESTION': {
-        const question: RGWQuestion = {
-          id: Math.random().toString(36).substring(2, 10),
-          askerId: playerId,
-          text: data.question as string,
-          answer: null,
-          answeredAt: null,
-        };
-        return { newState: { ...s, questions: [...s.questions, question] } };
-      }
-
-      case 'ANSWER_QUESTION': {
-        if (playerId !== s.identityHolderId) return { newState: s };
-        const questionId = data.questionId as string;
-        const answer = data.answer as 'yes' | 'no';
-        const updated = s.questions.map((q) =>
-          q.id === questionId ? { ...q, answer, answeredAt: Date.now() } : q
-        );
-        return { newState: { ...s, questions: updated } };
-      }
-
-      case 'VOTE_SKIP': {
-        if (playerId === s.identityHolderId) return { newState: s };
-        const skipVotes = { ...s.skipVotes, [playerId]: true };
-        const nonHolderCount = Object.keys(s.scores).length - 1;
-        const skipApproved = Object.keys(skipVotes).length > nonHolderCount / 2;
-
-        if (!skipApproved) return { newState: { ...s, skipVotes } };
-
-        // Skip — draw new identity
-        const entries = await getContentEntries(options.selectedPacks, 'identity');
-        let identity = { name: '', category: 'Actors', nationality: 'American', era: '2000s', hintTags: [] as string[] };
-
-        if (options.aiSettings?.apiKey) {
-          const cats = ['Actors', 'Musicians', 'Athletes', 'Politicians'];
-          const ai = await generateIdentity(options.aiSettings, pickRandom(cats));
-          if (ai) identity = ai;
-        }
-        if (!identity.name && entries.length > 0) {
-          identity = pickRandom(entries) as typeof identity;
-        }
-
-        const privateData = identity.name ? { [s.identityHolderId]: { identity: identity.name } } : undefined;
-
-        return {
-          newState: {
-            ...s,
-            identityCategory: identity.category || s.identityCategory,
-            questions: [],
-            skipVotes: {},
-            skipsUsed: s.skipsUsed + 1,
-            buzzerId: null,
-            buzzerGuess: null,
-          },
-          privateData,
-        };
-      }
-
-      case 'BUZZ': {
-        if (s.buzzerId || playerId === s.identityHolderId) return { newState: s };
-        return { newState: { ...s, buzzerId: playerId, phaseTimeoutMs: 30_000, phaseStartedAt: Date.now() } };
-      }
-
-      case 'SUBMIT_GUESS': {
-        if (playerId !== s.buzzerId) return { newState: s };
-        return { newState: { ...s, buzzerGuess: data.guess as string } };
-      }
-
-      case 'CONFIRM_GUESS': {
-        // Identity holder confirms correct/wrong and reveals identity
-        const correct = data.correct as boolean;
-        const revealedIdentity = (data.revealedIdentity as string | undefined) ?? null;
+      case 'COMPLETE_GUESS': {
+        if (s.phase !== 'gameplay') return { newState: s };
+        
+        const result = data.result as 'correct' | 'pass';
+        const newCompleted = { ...s.completed, [playerId]: result };
         const newScores = { ...s.scores };
-        const questionCount = s.questions.filter((q) => q.answer != null).length;
 
-        if (correct && s.buzzerId) {
-          const score = SCORE_TABLE[Math.min(questionCount, SCORE_TABLE.length - 1)];
-          newScores[s.buzzerId] = (newScores[s.buzzerId] ?? 0) + score;
+        if (result === 'correct') {
+          newScores[playerId] = (newScores[playerId] ?? 0) + 10;
         }
+
+        const isRoundOver = Object.keys(newCompleted).length === Object.keys(s.scores).length;
 
         return {
           newState: {
             ...s,
+            completed: newCompleted,
             scores: newScores,
-            revealed: true,
-            revealedIdentity,
-            phase: 'scoring',
-            phaseTimeoutMs: 8000,
-          },
+            phase: isRoundOver ? 'scoring' : s.phase,
+            phaseTimeoutMs: isRoundOver ? null : s.phaseTimeoutMs,
+          }
         };
       }
 
@@ -199,6 +108,8 @@ const REVERSE_GUESS_WHO: GamePlugin = {
             ...s,
             phase: isLast ? 'winner' : 'round-start',
             round: isLast ? s.round : s.round + 1,
+            phaseStartedAt: Date.now(),
+            phaseTimeoutMs: isLast ? null : 1000, // small delay before auto-generating
           },
         };
       }
@@ -208,15 +119,18 @@ const REVERSE_GUESS_WHO: GamePlugin = {
     }
   },
 
-  async handleTimeout(state: any, _options: any): Promise<StateTransition> {
+  async handleTimeout(state: any, options: any): Promise<StateTransition> {
     const s = state as RGWGameState;
-    if (s.phase === 'voting') {
-      return { newState: { ...s, phase: 'scoring', phaseTimeoutMs: 8000 } };
+    
+    if (s.phase === 'countdown') {
+      return { newState: { ...s, phase: 'gameplay', phaseTimeoutMs: null, phaseStartedAt: Date.now() } };
     }
-    // Buzz timer expired — auto-fail guess
-    if (s.phase === 'gameplay' && s.buzzerId) {
-      return { newState: { ...s, phase: 'scoring', phaseTimeoutMs: 8000, revealed: true } };
+    
+    if (s.phase === 'round-start') {
+      // Auto-trigger START_ROUND
+      return this.handleAction(state, Object.keys(state.scores)[0], 'START_ROUND', {}, options);
     }
+    
     return { newState: s };
   },
 
