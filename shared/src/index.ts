@@ -108,17 +108,39 @@ export interface SlipItInPhrase {
   completed: boolean;
 }
 
+export interface SlipItInClaim {
+  phraseId: string;
+  phrase: string;
+  startedAt: number;
+  pausedAt: number | null;
+  accusedBy: string | null;
+}
+
+export interface SlipItInVote {
+  phraseId: string;
+  phrase: string;
+  votes: Record<string, boolean>; // voterId -> true/false
+}
+
 export interface SlipItInGameState extends BaseGameState {
   gameId: 'slip-it-in';
-  // phrases are stored server-side per player, clients only see their own
+  honorRules: boolean;
+  phraseDeck: SlipItInPhrase[];
   playerPhraseCount: Record<string, number>; // playerId → remaining phrases
+  activeClaims: Record<string, SlipItInClaim>; // playerId → active claim
+  activeVotes: Record<string, SlipItInVote>; // playerId → active vote
   accusationLog: Array<{
     accuserId: string;
     accusedId: string;
-    phraseId: string;
+    phraseId?: string;
     correct: boolean;
     timestamp: number;
   }>;
+  phraseLog: Array<{
+    playerId: string;
+    phrase: string;
+    timestamp: number;
+  }>; // public feed: "{name} slipped in phrase"
   winnerId: string | null;
 }
 

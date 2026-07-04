@@ -45,9 +45,9 @@ export default function MoleView() {
   }
 
   if (state.phase === 'gameplay' || state.phase === 'round-start') {
-    const myClue = state.clueGrid.find((c) => c.playerId === playerId);
-    const submitted = myClue?.clue !== null;
-    const submittedCount = state.clueGrid.filter((c) => c.clue !== null).length;
+    const myClue = (state.clueGrid ?? []).find((c) => c.playerId === playerId);
+    const submitted = myClue?.clue != null;
+    const submittedCount = (state.clueGrid ?? []).filter((c) => c.clue != null).length;
 
     return (
       <div className={isHost ? 'host-screen' : 'player-screen items-center justify-center p-6'}>

@@ -22,50 +22,37 @@ export default function Lobby() {
   const navigate = useNavigate();
   
   useEffect(() => {
-    if (urlRoomCode && urlRoomCode !== roomCode) {
-      setRoomCode(urlRoomCode);
-    }
+    if (urlRoomCode && urlRoomCode !== roomCode) setRoomCode(urlRoomCode);
   }, [urlRoomCode, roomCode, setRoomCode]);
   
   useEffect(() => {
-    if (roomStatus === 'playing' && roomCode) {
-      navigate(`/game/${roomCode}`);
-    }
+    if (roomStatus === 'playing' && roomCode) navigate(`/game/${roomCode}`);
   }, [roomStatus, roomCode, navigate]);
   
   const isHost = playerId === hostId;
   const [selectedGame, setSelectedGame] = useState<GameId>(gameId || 'chameleon');
   const [showAI, setShowAI] = useState(false);
+  const [showQR, setShowQR] = useState(false);
   const [aiKey, setAiKey] = useState(localStorage.getItem('partybox_ai_key') || '');
   const [aiModel, setAiModel] = useState(localStorage.getItem('partybox_ai_model') || 'anthropic/claude-3-haiku');
 
-  const joinUrl = useMemo(() => {
-    return `${window.location.origin}/join/${roomCode}`;
-  }, [roomCode]);
-
+  const joinUrl = useMemo(() => `${window.location.origin}/join/${roomCode}`, [roomCode]);
   const activePlayers = Object.entries(players).filter(([_, p]) => p.isConnected);
   const me = players[playerId || ''];
+  const error = useUIStore(s => s.error);
 
   async function handleToggleReady() {
     if (!playerId || !me || !roomCode) return;
-    try {
-      await callSetReady({ roomCode, isReady: !me.isReady, playerId });
-    } catch (e: unknown) {
-      console.error('Ready toggle failed:', e);
-    }
+    try { await callSetReady({ roomCode, isReady: !me.isReady, playerId }); }
+    catch (e) { console.error('Ready toggle failed:', e); }
   }
 
   async function handleStart() {
     if (!roomCode || !playerId) return;
     setLoading(true);
-    try {
-      // Pass an empty array for selectedPacks for now since content packs are managed elsewhere or default to all
-      await callStartGame({ roomCode, gameId: selectedGame, selectedPacks: [], requestingPlayerId: playerId });
-    } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : 'Failed to start');
-    } finally {
-      setLoading(false);
-    }
+    try { await callStartGame({ roomCode, gameId: selectedGame, selectedPacks: [], requestingPlayerId: playerId }); }
+    catch (e: unknown) { setError(e instanceof Error ? e.message : 'Failed to start'); }
+    finally { setLoading(false); }
   }
 
   async function handleSaveAISettings() {
@@ -74,164 +61,156 @@ export default function Lobby() {
     try {
       localStorage.setItem('partybox_ai_key', aiKey);
       localStorage.setItem('partybox_ai_model', aiModel);
-      await callUpdateAISettings({ 
-        roomCode, 
-        settings: {
-          apiKey: aiKey,
-          model: aiModel,
-          temperature: 0.8,
-          maxTokens: 500
-        },
-        requestingPlayerId: playerId
-      });
+      await callUpdateAISettings({ roomCode, settings: { apiKey: aiKey, model: aiModel, temperature: 0.8, maxTokens: 500 }, requestingPlayerId: playerId });
       setShowAI(false);
-    } catch (e) {
-      setError('Failed to update AI settings');
-    } finally {
-      setLoading(false);
-    }
+    } catch (e) { setError('Failed to update AI settings'); }
+    finally { setLoading(false); }
   }
-
-  const error = useUIStore(s => s.error);
 
   if (!roomCode) return <div className="host-screen"><div className="font-bebas text-4xl text-spray animate-pulse">LOADING ROOM...</div></div>;
 
   const errorDisplay = error && (
-    <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-magenta text-white px-4 py-2 rounded shadow-magenta font-bebas z-50 animate-pop-in">
+    <div className="fixed top-4 left-1/2 -translate-x-1/2 bg-magenta text-white px-4 py-2 rounded shadow-magenta font-bebas z-50 animate-pop-in text-sm whitespace-nowrap">
       {error}
     </div>
   );
 
   // ─── HOST VIEW ───
   if (isHost) {
+    const minP = GAMES.find(g => g.id === selectedGame)?.minPlayers || 2;
+    const canStart = activePlayers.length >= minP;
+
     return (
-      <div className="host-screen p-8">
+      <div className="min-h-screen bg-black p-4 sm:p-6 flex flex-col">
         {errorDisplay}
-        <div className="w-full max-w-7xl mx-auto grid grid-cols-12 gap-8 items-start h-full">
-          
-          {/* Left Col: Players */}
-          <div className="col-span-3 card p-6 shadow-spray-sm min-h-[500px]">
-            <h2 className="section-label mb-4">PLAYERS ({activePlayers.length})</h2>
-            <div className="flex flex-col gap-3">
-              {activePlayers.map(([pid, p]) => (
-                <div key={pid} className={`player-chip ${p.isReady ? 'player-chip-ready' : ''} group relative`}>
-                  <div className="flex-1 truncate">{p.nickname}</div>
-                  {p.isReady ? <span className="text-lime text-xs font-marker">READY</span> : <span className="text-white/30 text-xs font-marker">WAIT</span>}
-                  
-                  {p.isHost ? (
-                     <span className="ml-2 text-[10px] bg-spray text-black px-1 rounded font-bebas">HOST</span>
-                  ) : (
-                    <button 
-                      onClick={() => callKickPlayer({ roomCode, targetPlayerId: pid, requestingPlayerId: playerId! })}
-                      className="absolute right-2 opacity-0 group-hover:opacity-100 text-magenta hover:text-white transition-opacity font-bebas text-sm bg-black/50 px-2 py-1 rounded"
-                    >
-                      KICK
-                    </button>
-                  )}
-                </div>
-              ))}
-              {activePlayers.length === 0 && (
-                <div className="text-center p-8 border border-dashed border-white/10 text-white/30 font-grotesk text-sm">
-                  Waiting for players...
-                </div>
-              )}
+
+        {/* ── Header: Room code + QR ── */}
+        <div className="flex items-start justify-between gap-4 mb-6">
+          <div>
+            <div className="font-marker text-spray text-sm mb-1 -rotate-1">JOIN AT</div>
+            <div className="code-display text-5xl sm:text-7xl leading-none">{roomCode}</div>
+          </div>
+          <button
+            onClick={() => setShowQR(v => !v)}
+            className="card p-3 border-spray text-spray font-bebas text-sm flex flex-col items-center gap-1 shrink-0"
+          >
+            <span className="text-2xl">📱</span>
+            <span>QR</span>
+          </button>
+        </div>
+
+        {/* QR Code modal */}
+        {showQR && (
+          <div className="fixed inset-0 bg-black/80 z-40 flex items-center justify-center p-8" onClick={() => setShowQR(false)}>
+            <div className="card p-6 bg-white" onClick={e => e.stopPropagation()}>
+              <QRCodeSVG value={joinUrl} size={220} bgColor="#ffffff" fgColor="#111111" level="H" />
+              <p className="text-black font-marker text-center mt-3 text-sm">Scan to join</p>
             </div>
           </div>
+        )}
 
-          {/* Middle Col: Room Code & Game config */}
-          <div className="col-span-6 flex flex-col items-center justify-between min-h-[500px]">
-            <div className="text-center w-full animate-pop-in mt-4">
-              <div className="font-marker text-spray text-xl mb-2 transform -rotate-2">JOIN AT</div>
-              <div className="code-display leading-none mb-6 text-[10rem]">{roomCode}</div>
-              
-              {/* Game Selector (Sticker row) */}
-              <div className="w-full mt-12 text-left">
-                <div className="flex justify-between items-end mb-4">
-                  <h3 className="section-label">SELECT GAME</h3>
-                  <button onClick={() => setShowAI(!showAI)} className={`tag ${aiKey ? 'tag-cyan' : 'tag-chalk'}`}>
-                    🤖 AI SETTINGS
-                  </button>
-                </div>
-                
-                {showAI ? (
-                  <div className="card p-6 bg-offblack shadow-cyan border-cyan mb-8 animate-slide-up">
-                    <h3 className="font-bebas text-2xl text-cyan mb-4">AI CONFIG</h3>
-                    <input type="password" placeholder="OpenRouter API Key (sk-or-v1-...)" className="input-field mb-3" value={aiKey} onChange={e => setAiKey(e.target.value)} />
-                    <input type="text" placeholder="Model ID (e.g. anthropic/claude-3-haiku)" className="input-field mb-4" value={aiModel} onChange={e => setAiModel(e.target.value)} />
-                    <div className="flex gap-3">
-                      <button onClick={handleSaveAISettings} className="btn-primary flex-1">SAVE</button>
-                      <button onClick={() => setShowAI(false)} className="btn-secondary flex-1">CANCEL</button>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex overflow-x-auto gap-4 pb-4 snap-x hide-scrollbar">
-                    {GAMES.map(g => (
-                      <div 
-                        key={g.id}
-                        onClick={() => setSelectedGame(g.id as GameId)}
-                        className={`card flex-none w-48 p-4 cursor-pointer snap-start transition-all
-                          ${selectedGame === g.id ? 'border-spray shadow-spray -translate-y-2' : 'hover:-translate-y-1 hover:border-white/30'}`}
-                      >
-                        <div className="text-4xl mb-2">{g.emoji}</div>
-                        <div className="font-bebas text-xl mb-1 truncate">{g.name}</div>
-                        <div className="text-xs text-white/50 mb-3">{g.desc}</div>
-                        <div className="flex gap-2">
-                          <span className="tag-chalk">{g.players}</span>
-                          {g.ai && <span className="tag-cyan">AI</span>}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+        {/* ── Players list ── */}
+        <div className="card p-4 mb-4 bg-offblack">
+          <h2 className="section-label mb-3">PLAYERS ({activePlayers.length})</h2>
+          <div className="flex flex-wrap gap-2">
+            {activePlayers.map(([pid, p]) => (
+              <div key={pid} className={`player-chip ${p.isReady ? 'player-chip-ready' : ''} relative group`}>
+                <span className="truncate max-w-[100px] text-sm">{p.nickname}</span>
+                {p.isHost
+                  ? <span className="ml-1 text-[9px] bg-spray text-black px-1 rounded font-bebas">HOST</span>
+                  : <span className={`ml-1 text-[9px] font-marker ${p.isReady ? 'text-lime' : 'text-white/30'}`}>{p.isReady ? '✓' : '…'}</span>
+                }
+                {!p.isHost && (
+                  <button
+                    onClick={() => callKickPlayer({ roomCode, targetPlayerId: pid, requestingPlayerId: playerId! })}
+                    className="absolute -top-1 -right-1 w-4 h-4 bg-magenta rounded-full text-white text-[9px] opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-opacity flex items-center justify-center"
+                  >×</button>
                 )}
               </div>
-            </div>
-
-            <div className="w-full mt-8">
-              <button 
-                onClick={handleStart} 
-                disabled={activePlayers.length < (GAMES.find(g => g.id === selectedGame)?.minPlayers || 2)} 
-                className="btn-primary btn-lg btn-full text-2xl hover:animate-jitter"
-              >
-                START {GAMES.find(g => g.id === selectedGame)?.name.toUpperCase() || 'GAME'}
-              </button>
-            </div>
-          </div>
-
-          {/* Right Col: QR Code */}
-          <div className="col-span-3 flex flex-col items-center justify-center">
-            <div className="card p-6 bg-white transform rotate-2 shadow-magenta">
-              <QRCodeSVG value={joinUrl} size={220} bgColor="#ffffff" fgColor="#111111" level="H" />
-            </div>
-            <div className="mt-4 font-marker text-white/50 text-sm transform rotate-2">SCAN TO JOIN</div>
+            ))}
+            {activePlayers.length === 0 && (
+              <p className="text-white/30 font-grotesk text-sm py-2">Waiting for players to join...</p>
+            )}
           </div>
         </div>
+
+        {/* ── Game selector ── */}
+        <div className="card p-4 mb-4 bg-offblack">
+          <div className="flex justify-between items-center mb-3">
+            <h3 className="section-label">SELECT GAME</h3>
+            <button onClick={() => setShowAI(!showAI)} className={`tag text-xs ${aiKey ? 'tag-cyan' : 'tag-chalk'}`}>
+              🤖 AI
+            </button>
+          </div>
+
+          {showAI ? (
+            <div className="space-y-3">
+              <input type="password" placeholder="OpenRouter API Key (sk-or-v1-...)" className="input-field text-sm" value={aiKey} onChange={e => setAiKey(e.target.value)} />
+              <input type="text" placeholder="Model ID (e.g. anthropic/claude-3-haiku)" className="input-field text-sm" value={aiModel} onChange={e => setAiModel(e.target.value)} />
+              <div className="flex gap-2">
+                <button onClick={handleSaveAISettings} className="btn-primary flex-1 text-sm py-2">SAVE</button>
+                <button onClick={() => setShowAI(false)} className="btn-secondary flex-1 text-sm py-2">CANCEL</button>
+              </div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              {GAMES.map(g => (
+                <div
+                  key={g.id}
+                  onClick={() => setSelectedGame(g.id as GameId)}
+                  className={`card p-3 cursor-pointer transition-all text-center
+                    ${selectedGame === g.id ? 'border-spray shadow-spray -translate-y-0.5' : 'border-white/10 hover:border-white/30'}`}
+                >
+                  <div className="text-2xl mb-1">{g.emoji}</div>
+                  <div className="font-bebas text-sm leading-tight mb-1">{g.name}</div>
+                  <div className="flex gap-1 justify-center">
+                    <span className="tag-chalk text-[9px] px-1">{g.players}</span>
+                    {g.ai && <span className="tag-cyan text-[9px] px-1">AI</span>}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* ── Start button ── */}
+        <button
+          onClick={handleStart}
+          disabled={!canStart}
+          className="btn-primary btn-lg btn-full text-xl mt-auto"
+        >
+          {canStart
+            ? `START ${GAMES.find(g => g.id === selectedGame)?.name.toUpperCase() || 'GAME'}`
+            : `NEED ${minP - activePlayers.length} MORE PLAYER${minP - activePlayers.length !== 1 ? 'S' : ''}`
+          }
+        </button>
       </div>
     );
   }
 
   // ─── PLAYER VIEW ───
   return (
-    <div className="player-screen p-6 justify-center">
-      <div className="text-center mb-12">
-        <div className="section-label mb-2">ROOM</div>
-        <div className="code-display text-6xl">{roomCode}</div>
+    <div className="min-h-screen bg-black flex flex-col items-center justify-center p-6 gap-8">
+      {errorDisplay}
+      <div className="text-center">
+        <div className="section-label mb-1">ROOM</div>
+        <div className="code-display text-5xl">{roomCode}</div>
       </div>
       
-      <div className="card p-8 mb-8 text-center shadow-spray">
-        <div className="text-sm text-white/50 font-grotesk mb-1">YOU ARE</div>
-        <div className="font-bebas text-4xl text-white mb-8 truncate">{me?.nickname}</div>
-        
-        <button 
+      <div className="card p-6 w-full max-w-sm text-center shadow-spray">
+        <div className="text-xs text-white/50 font-grotesk mb-1">YOU ARE</div>
+        <div className="font-bebas text-3xl text-white mb-6 truncate">{me?.nickname}</div>
+        <button
           onClick={handleToggleReady}
-          className={`btn-primary w-full py-4 text-2xl ${me?.isReady ? '!bg-lime !border-lime !text-black' : ''}`}
+          className={`btn-primary w-full py-5 text-2xl ${me?.isReady ? '!bg-lime !border-lime !text-black' : ''}`}
           style={me?.isReady ? { boxShadow: '4px 4px 0 #A8FF3E' } : {}}
         >
-          {me?.isReady ? "I'M READY!" : 'NOT READY'}
+          {me?.isReady ? "✅ I'M READY!" : 'TAP WHEN READY'}
         </button>
       </div>
       
       <div className="text-center">
-        <div className="font-marker text-white/40 mb-3">WAITING ON HOST</div>
+        <div className="font-marker text-white/40 mb-3 text-sm">WAITING ON HOST</div>
         <div className="flex justify-center gap-2">
           {[0,1,2].map(i => (
             <div key={i} className="w-2 h-2 rounded-full bg-spray animate-pulse" style={{ animationDelay: `${i * 150}ms` }} />

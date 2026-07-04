@@ -57,6 +57,7 @@ const SLIP_IT_IN: GamePlugin = {
       activeClaims: {},
       activeVotes: {},
       accusationLog: [],
+      phraseLog: [],
       winnerId: null,
       phaseTimeoutMs: null,
     };
@@ -75,7 +76,8 @@ const SLIP_IT_IN: GamePlugin = {
       phraseDeck:    state.phraseDeck    ?? [],
       honorRules:    state.honorRules    ?? true,
       accusationLog: state.accusationLog ?? [],
-      winnerId:      state.winnerId      ?? null,   // Firebase drops null → becomes undefined
+      phraseLog:     state.phraseLog     ?? [],
+      winnerId:      state.winnerId      ?? null,
     };
 
     switch (action) {
@@ -237,11 +239,17 @@ const SLIP_IT_IN: GamePlugin = {
             [claimPlayerId]: { phraseIdToComplete: claim.phraseId, _action: 'COMPLETE_PHRASE' }
           };
 
+          const newPhraseLog = [
+            ...s.phraseLog,
+            { playerId: claimPlayerId, phrase: claim.phrase, timestamp: Date.now() }
+          ];
+
           return {
             newState: { 
               ...s, 
               activeClaims: newClaims, 
               playerPhraseCount: newCounts, 
+              phraseLog: newPhraseLog,
               phase: nextPhase, 
               winnerId 
             },
@@ -292,11 +300,17 @@ const SLIP_IT_IN: GamePlugin = {
               [targetPlayerId]: { phraseIdToComplete: activeVote.phraseId, _action: 'COMPLETE_PHRASE' }
             };
 
+            const newPhraseLog = [
+              ...s.phraseLog,
+              { playerId: targetPlayerId, phrase: activeVote.phrase, timestamp: Date.now() }
+            ];
+
             return {
               newState: { 
                 ...s, 
                 activeVotes: newVotes, 
                 playerPhraseCount: newCounts, 
+                phraseLog: newPhraseLog,
                 phase: nextPhase, 
                 winnerId 
               },
