@@ -2,7 +2,7 @@
   <img src="client/public/favicon.svg" alt="PartyBox Logo" width="128" height="128" />
   <h1>🎉 PARTYBOX</h1>
   <p><b>The real-time, underground party game platform.</b></p>
-  <p>Play 6 social games with 3–12 friends using phones as controllers and a shared screen (or TV) as the game board.</p>
+  <p>Play 6 social games with 3–12 friends. Everyone plays on their own phone, while the person who creates the room acts as the main scoreboard (perfect for passing around a tablet or casting to a TV!).</p>
 </div>
 
 ---
