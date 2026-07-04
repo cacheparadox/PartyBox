@@ -106,9 +106,8 @@ export default function SlipItInView() {
   if (state.phase === 'gameplay') {
     const myClaim = state.activeClaims?.[playerId ?? ''];
     const activeVoteForMe = state.activeVotes?.[playerId ?? ''];
-    const otherActiveClaims = Object.entries(state.activeClaims ?? {}).filter(([id]) => id !== playerId);
 
-    // Active group votes I need to cast (not for myself)
+    // Only votes where I haven't voted yet (and it's not my own claim)
     const myPendingVotes = Object.entries(state.activeVotes ?? {}).filter(
       ([targetId, v]) => targetId !== playerId && !(playerId && v.votes[playerId] !== undefined)
     );
@@ -234,34 +233,6 @@ export default function SlipItInView() {
             </div>
           )}
 
-          {/* ── Who's claiming right now (for potential accusation) ── */}
-          {otherActiveClaims.length > 0 && (
-            <div className="card p-4 bg-offblack border-lime/30 space-y-2">
-              <p className="section-label text-lime/70 text-xs">🔴 ACTIVE CLAIMS</p>
-              {otherActiveClaims.map(([claimerId, claim]) => (
-                <div key={claimerId} className="flex items-center justify-between gap-2 py-1">
-                  <span className="font-bebas text-white text-xl">{players[claimerId]?.nickname}</span>
-                  <span className="font-marker text-white/50 text-sm">
-                    {claim.pausedAt !== null ? '⏸ paused' : '⏱ claiming...'}
-                  </span>
-                  {claim.pausedAt === null && (
-                    <button
-                      onClick={() => {
-                        setAccuseTarget(claimerId);
-                        // immediately send accusation for whoever is actively claiming
-                        sendAction('ACCUSE_PLAYER', { accusedId: claimerId });
-                        setAccuseTarget(null);
-                      }}
-                      className="text-xs font-bebas px-3 py-1 bg-magenta/20 border border-magenta rounded-lg text-magenta hover:bg-magenta hover:text-white transition-colors"
-                    >
-                      ACCUSE!
-                    </button>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-
           {/* ── Progress + Accusations ── */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="card p-4 bg-offblack">
@@ -304,8 +275,8 @@ export default function SlipItInView() {
             </div>
           </div>
 
-          {/* ── Accuse button (only when no active claim for you, and no one is claiming) ── */}
-          {!myClaim && otherActiveClaims.length === 0 && (
+          {/* ── Accuse button — always available (accusations are based on listening, not UI cues) ── */}
+          {!myClaim && (
             <>
               {accuseTarget === null ? (
                 <button id="btn-accuse" onClick={() => setAccuseTarget('')}

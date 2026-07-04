@@ -52,6 +52,22 @@ function genId(length = 16) {
   return Array.from({length}, () => Math.random().toString(36)[2] || '0').join('');
 }
 
+/**
+ * Firebase RTDB rejects `undefined` values at any depth.
+ * This strips them recursively, converting undefined → null for nullable fields
+ * and omitting purely undefined keys.
+ */
+function sanitizeForRTDB(obj: unknown): unknown {
+  if (obj === undefined) return null;
+  if (obj === null || typeof obj !== 'object') return obj;
+  if (Array.isArray(obj)) return obj.map(sanitizeForRTDB);
+  const result: Record<string, unknown> = {};
+  for (const [k, v] of Object.entries(obj as Record<string, unknown>)) {
+    if (v !== undefined) result[k] = sanitizeForRTDB(v);
+  }
+  return result;
+}
+
 export async function callCreateRoom({ nickname }: CreateRoomPayload): Promise<CreateRoomResult> {
   const roomCode = generateRoomCode();
   const playerId = genId(16);
@@ -130,7 +146,7 @@ export async function callStartGame({ roomCode, gameId, selectedPacks, requestin
   const { newState, privateData } = await setupGame(gameId, options);
 
   await updateDoc(doc(db, 'rooms', roomCode), { status: 'playing', gameId });
-  await update(ref(rtdb, `rooms/${roomCode}`), { status: 'playing', gameId, gameState: newState });
+  await update(ref(rtdb, `rooms/${roomCode}`), { status: 'playing', gameId, gameState: sanitizeForRTDB(newState) });
 
   if (privateData) {
     // Use set() (not update()) so that arrays aren't merged into RTDB objects with numeric keys
@@ -155,7 +171,7 @@ export async function callPlayerAction({ roomCode, action, data, playerId }: Pla
 
   const { newState, privateData } = await handlePlayerAction(room.gameId as GameId, state, playerId, action, data, options);
 
-  await set(ref(rtdb, `rooms/${roomCode}/gameState`), newState);
+  await set(ref(rtdb, `rooms/${roomCode}/gameState`), sanitizeForRTDB(newState));
 
   if (privateData) {
     const writes = Object.entries(privateData).map(([pid, pdata]) => update(ref(rtdb, `private/${roomCode}/${pid}`), pdata));

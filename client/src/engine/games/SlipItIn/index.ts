@@ -65,14 +65,17 @@ const SLIP_IT_IN: GamePlugin = {
   },
 
   async handleAction(state: any, playerId: string, action: string, data: any, options: any): Promise<StateTransition> {
-    // Normalize: old game states from Firebase may be missing new fields
+    // Normalize: old game states from Firebase may be missing new fields.
+    // Firebase drops `null` values on write, so they come back as `undefined`.
+    // We must normalize ALL nullable fields to explicit null before use.
     const s: SlipItInGameState = {
       ...state,
-      activeClaims: state.activeClaims ?? {},
-      activeVotes:  state.activeVotes  ?? {},
-      phraseDeck:   state.phraseDeck   ?? [],
-      honorRules:   state.honorRules   ?? true,
+      activeClaims:  state.activeClaims  ?? {},
+      activeVotes:   state.activeVotes   ?? {},
+      phraseDeck:    state.phraseDeck    ?? [],
+      honorRules:    state.honorRules    ?? true,
       accusationLog: state.accusationLog ?? [],
+      winnerId:      state.winnerId      ?? null,   // Firebase drops null → becomes undefined
     };
 
     switch (action) {
@@ -223,7 +226,7 @@ const SLIP_IT_IN: GamePlugin = {
           newCounts[claimPlayerId] = Math.max(0, (newCounts[claimPlayerId] || 0) - 1);
 
           let nextPhase = s.phase;
-          let winnerId = s.winnerId;
+          let winnerId: string | null = s.winnerId ?? null;
 
           if (newCounts[claimPlayerId] === 0) {
             nextPhase = 'winner';
@@ -278,7 +281,7 @@ const SLIP_IT_IN: GamePlugin = {
             newCounts[targetPlayerId] = Math.max(0, (newCounts[targetPlayerId] || 0) - 1);
 
             let nextPhase = s.phase;
-            let winnerId = s.winnerId;
+            let winnerId: string | null = s.winnerId ?? null;
 
             if (newCounts[targetPlayerId] === 0) {
               nextPhase = 'winner';
