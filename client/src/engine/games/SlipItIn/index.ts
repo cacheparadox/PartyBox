@@ -1,12 +1,11 @@
 import type { GamePlugin, GameOptions, StateTransition } from '../GamePlugin';
-import { createBaseState, shuffle, pickRandom } from '../GamePlugin';
-import type { SlipItInGameState, SlipItInPhrase } from '../../../../../shared/src/index';
+import { createBaseState, shuffle } from '../GamePlugin';
+import type { SlipItInGameState, SlipItInPhrase, SlipItInClaim, SlipItInVote } from '../../../../../shared/src/index';
 import { getContentEntries } from '../../services/ContentService';
-
 
 const PHRASES_PER_PLAYER = 5;
 
-function generatePhraseId(): string {
+function generateId(): string {
   return Math.random().toString(36).substring(2, 10);
 }
 
@@ -28,27 +27,35 @@ const SLIP_IT_IN: GamePlugin = {
     const privateData: Record<string, Record<string, unknown>> = {};
     const playerPhraseCount: Record<string, number> = {};
 
-    playerIds.forEach((playerId, idx) => {
+    let deckIndex = 0;
+    playerIds.forEach((playerId) => {
       const phrases: SlipItInPhrase[] = shuffledPhrases
-        .slice(idx * PHRASES_PER_PLAYER, (idx + 1) * PHRASES_PER_PLAYER)
-        .map((e) => {
-          const phraseString = (e as any).phrase || (e as any).text || 'Something went wrong';
-          return {
-            id: generatePhraseId(),
-            phrase: phraseString,
-            completed: false,
-          };
-        });
-
+        .slice(deckIndex, deckIndex + PHRASES_PER_PLAYER)
+        .map((e: any) => ({
+          id: generateId(),
+          phrase: e.phrase || e.text || 'Something went wrong',
+          completed: false,
+        }));
+      deckIndex += PHRASES_PER_PLAYER;
       privateData[playerId] = { phrases };
       playerPhraseCount[playerId] = PHRASES_PER_PLAYER;
     });
+
+    const phraseDeck = shuffledPhrases.slice(deckIndex).map((e: any) => ({
+      id: generateId(),
+      phrase: e.phrase || e.text || 'Something went wrong',
+      completed: false,
+    }));
 
     const state: SlipItInGameState = {
       ...base,
       gameId: 'slip-it-in',
       phase: 'instructions',
+      honorRules: true,
+      phraseDeck,
       playerPhraseCount,
+      activeClaims: {},
+      activeVotes: {},
       accusationLog: [],
       winnerId: null,
       phaseTimeoutMs: null,
@@ -57,111 +64,238 @@ const SLIP_IT_IN: GamePlugin = {
     return { newState: state, privateData };
   },
 
-  async handleAction(state: any, playerId: any, action: any, data: any, options: any): Promise<StateTransition> {
+  async handleAction(state: any, playerId: string, action: string, data: any, options: any): Promise<StateTransition> {
     const s = state as SlipItInGameState;
 
     switch (action) {
       case 'START_GAME':
         return { newState: { ...s, phase: 'gameplay' } };
 
-      case 'ACCUSE': {
-        const accusedId = data.accusedId as string;
-        const phraseId = data.phraseId as string;
+      case 'TOGGLE_HONOR_RULES':
+        return { newState: { ...s, honorRules: !s.honorRules } };
 
-        // The actual validation happens client-side via private data reveal
-        // For now, host confirms correct/incorrect
-        return { newState: s };
+      case 'CLAIM_PHRASE': {
+        if (s.activeClaims[playerId]) return { newState: s };
+        
+        const { phraseId, phrase } = data as { phraseId: string; phrase: string };
+        const newClaims = { ...s.activeClaims };
+        newClaims[playerId] = {
+          phraseId,
+          phrase,
+          startedAt: Date.now(),
+          pausedAt: null,
+          accusedBy: null,
+        };
+        return { newState: { ...s, activeClaims: newClaims } };
       }
 
-      case 'CONFIRM_ACCUSATION': {
-        // Host or server confirms whether accusation was correct
-        const { accuserId, accusedId, phraseId, correct } = data as {
-          accuserId: string;
-          accusedId: string;
-          phraseId: string;
-          correct: boolean;
+      case 'ACCUSE_PLAYER': {
+        const { accusedId } = data as { accusedId: string };
+        const claim = s.activeClaims[accusedId];
+
+        const privateData: Record<string, Record<string, unknown>> = {};
+
+        if (!claim || claim.pausedAt !== null) {
+          const newDeck = [...s.phraseDeck];
+          const penaltyPhrase = newDeck.shift();
+          
+          const newCounts = { ...s.playerPhraseCount };
+          newCounts[playerId] = (newCounts[playerId] || 0) + 1;
+
+          const newLog = [
+            ...s.accusationLog,
+            { accuserId: playerId, accusedId, correct: false, timestamp: Date.now() }
+          ];
+
+          if (penaltyPhrase) {
+            privateData[playerId] = { 
+              newPhrase: penaltyPhrase, 
+              _action: 'ADD_PHRASE' 
+            };
+          }
+
+          return { 
+            newState: { 
+              ...s, 
+              phraseDeck: newDeck, 
+              playerPhraseCount: newCounts,
+              accusationLog: newLog
+            }, 
+            privateData 
+          };
+        }
+
+        const newClaims = { ...s.activeClaims };
+        newClaims[accusedId] = {
+          ...claim,
+          pausedAt: Date.now(),
+          accusedBy: playerId
         };
 
-        const newCounts = { ...s.playerPhraseCount };
+        return { newState: { ...s, activeClaims: newClaims } };
+      }
+
+      case 'RESOLVE_ACCUSATION': {
+        const { correct } = data as { correct: boolean };
+        const claim = s.activeClaims[playerId];
+        if (!claim || claim.accusedBy === null || claim.pausedAt === null) return { newState: s };
+
+        const accuserId = claim.accusedBy;
+        const newClaims = { ...s.activeClaims };
         const newLog = [
           ...s.accusationLog,
-          { accuserId, accusedId, phraseId, correct, timestamp: Date.now() },
+          { accuserId, accusedId: playerId, correct, timestamp: Date.now() }
         ];
 
         const privateData: Record<string, Record<string, unknown>> = {};
 
         if (correct) {
-          // Remove phrase from accused, draw new one for accused
-          // (new phrase drawn from remaining pool — handled via private data update)
-          newCounts[accusedId] = Math.max(0, (newCounts[accusedId] ?? 0) - 1);
-
-          // Award score to accuser
-          const newScores = { ...s.scores };
-          newScores[accuserId] = (newScores[accuserId] ?? 0) + 10;
-
-          // Check win condition
-          const winner = Object.entries(newCounts).find(([, count]) => count === 0);
-
+          delete newClaims[playerId];
+          
+          const newDeck = [...s.phraseDeck];
+          const replacementPhrase = newDeck.shift();
+          if (replacementPhrase) {
+            privateData[playerId] = {
+              phraseIdToRemove: claim.phraseId,
+              newPhrase: replacementPhrase,
+              _action: 'REPLACE_PHRASE'
+            };
+          }
+          
           return {
-            newState: {
-              ...s,
-              scores: newScores,
-              playerPhraseCount: newCounts,
-              accusationLog: newLog,
-              winnerId: winner ? winner[0] : null,
-              phase: winner ? 'winner' : s.phase,
-            },
-            privateData,
+            newState: { ...s, activeClaims: newClaims, phraseDeck: newDeck, accusationLog: newLog },
+            privateData
           };
         } else {
-          // Incorrect accusation — accuser gets an extra phrase
-          const allEntries = await getContentEntries(options.selectedPacks, 'phrase');
-          const newPhrase = pickRandom(allEntries) as { phrase: string };
-          newCounts[accuserId] = (newCounts[accuserId] ?? 0) + 1;
+          const newDeck = [...s.phraseDeck];
+          const penaltyPhrase = newDeck.shift();
+          
+          const newCounts = { ...s.playerPhraseCount };
+          newCounts[accuserId] = (newCounts[accuserId] || 0) + 1;
 
-          privateData[accuserId] = {
-            addPhrase: {
-              id: generatePhraseId(),
-              phrase: newPhrase.phrase,
-              completed: false,
-            },
+          if (penaltyPhrase) {
+            privateData[accuserId] = { 
+              newPhrase: penaltyPhrase, 
+              _action: 'ADD_PHRASE' 
+            };
+          }
+
+          const elapsedPaused = Date.now() - claim.pausedAt;
+          newClaims[playerId] = {
+            ...claim,
+            startedAt: claim.startedAt + elapsedPaused,
+            pausedAt: null,
+            accusedBy: null
           };
 
           return {
             newState: {
               ...s,
+              activeClaims: newClaims,
+              phraseDeck: newDeck,
               playerPhraseCount: newCounts,
-              accusationLog: newLog,
+              accusationLog: newLog
             },
-            privateData,
+            privateData
           };
         }
       }
 
-      case 'COMPLETE_PHRASE': {
-        const phraseId = data.phraseId as string;
-        const newCounts = { ...s.playerPhraseCount };
-        newCounts[playerId] = Math.max(0, (newCounts[playerId] ?? 0) - 1);
+      case 'CLAIM_TIMEOUT': {
+        const { claimPlayerId } = data as { claimPlayerId: string };
+        const claim = s.activeClaims[claimPlayerId];
+        if (!claim) return { newState: s };
 
-        const winner = newCounts[playerId] === 0 ? playerId : null;
+        const newClaims = { ...s.activeClaims };
+        delete newClaims[claimPlayerId];
 
-        const newScores = { ...s.scores };
-        if (winner) {
-          newScores[winner] = (newScores[winner] ?? 0) + 50;
+        if (s.honorRules) {
+          const newCounts = { ...s.playerPhraseCount };
+          newCounts[claimPlayerId] = Math.max(0, (newCounts[claimPlayerId] || 0) - 1);
+
+          let nextPhase = s.phase;
+          let winnerId = s.winnerId;
+
+          if (newCounts[claimPlayerId] === 0) {
+            nextPhase = 'winner';
+            winnerId = claimPlayerId;
+          }
+
+          const privateData: Record<string, Record<string, unknown>> = {
+            [claimPlayerId]: { phraseIdToComplete: claim.phraseId, _action: 'COMPLETE_PHRASE' }
+          };
+
+          return {
+            newState: { 
+              ...s, 
+              activeClaims: newClaims, 
+              playerPhraseCount: newCounts, 
+              phase: nextPhase, 
+              winnerId 
+            },
+            privateData
+          };
+        } else {
+          const newVotes = { ...s.activeVotes };
+          newVotes[claimPlayerId] = {
+            phraseId: claim.phraseId,
+            phrase: claim.phrase,
+            votes: {}
+          };
+          return { newState: { ...s, activeClaims: newClaims, activeVotes: newVotes } };
+        }
+      }
+
+      case 'VOTE_CLAIM': {
+        const { targetPlayerId, vote } = data as { targetPlayerId: string, vote: boolean };
+        const activeVote = s.activeVotes[targetPlayerId];
+        if (!activeVote || targetPlayerId === playerId) return { newState: s };
+
+        activeVote.votes[playerId] = vote;
+        
+        const activePlayers = Object.keys(options.players).filter(p => options.players[p].isConnected);
+        const voters = activePlayers.filter(p => p !== targetPlayerId);
+        const totalVotes = Object.keys(activeVote.votes).length;
+
+        if (totalVotes >= voters.length) {
+          const yesVotes = Object.values(activeVote.votes).filter(v => v).length;
+          const noVotes = totalVotes - yesVotes;
+          
+          const newVotes = { ...s.activeVotes };
+          delete newVotes[targetPlayerId];
+
+          if (yesVotes > noVotes) {
+            const newCounts = { ...s.playerPhraseCount };
+            newCounts[targetPlayerId] = Math.max(0, (newCounts[targetPlayerId] || 0) - 1);
+
+            let nextPhase = s.phase;
+            let winnerId = s.winnerId;
+
+            if (newCounts[targetPlayerId] === 0) {
+              nextPhase = 'winner';
+              winnerId = targetPlayerId;
+            }
+
+            const privateData: Record<string, Record<string, unknown>> = {
+              [targetPlayerId]: { phraseIdToComplete: activeVote.phraseId, _action: 'COMPLETE_PHRASE' }
+            };
+
+            return {
+              newState: { 
+                ...s, 
+                activeVotes: newVotes, 
+                playerPhraseCount: newCounts, 
+                phase: nextPhase, 
+                winnerId 
+              },
+              privateData
+            };
+          } else {
+            return { newState: { ...s, activeVotes: newVotes } };
+          }
         }
 
-        return {
-          newState: {
-            ...s,
-            playerPhraseCount: newCounts,
-            scores: newScores,
-            winnerId: winner,
-            phase: winner ? 'winner' : s.phase,
-          },
-          privateData: {
-            [playerId]: { completedPhraseId: phraseId },
-          },
-        };
+        return { newState: s };
       }
 
       default:
@@ -173,13 +307,8 @@ const SLIP_IT_IN: GamePlugin = {
     return { newState: state };
   },
 
-  getPhaseTimeout: (_state: any) => {
-    return null; // No time limit — game ends when someone completes all phrases
-  },
-
-  isGameOver: (state: any) => {
-    return (state as SlipItInGameState).winnerId !== null || state.phase === 'winner';
-  },
+  getPhaseTimeout: (_state: any) => null,
+  isGameOver: (state: any) => (state as SlipItInGameState).winnerId !== null || state.phase === 'winner',
 
   getFinalScores: (state: any) => {
     return state.scores;
