@@ -155,6 +155,61 @@ export async function callStartGame({ roomCode, gameId, selectedPacks, requestin
   }
 }
 
+// ─── Private Data Action Processor ─────────────────────────────────────────
+// The engine sends privateData with _action descriptors to mutate each player's
+// phrase list. We must read the current list, apply the mutation, then set() it
+// back. Plain update() would just merge the descriptor as raw fields.
+type PrivatePhrase = { id: string; phrase: string; completed: boolean };
+
+function normalizePhrasesFromRTDB(raw: unknown): PrivatePhrase[] {
+  if (!raw) return [];
+  if (Array.isArray(raw)) return raw as PrivatePhrase[];
+  if (typeof raw === 'object') return Object.values(raw as Record<string, PrivatePhrase>);
+  return [];
+}
+
+async function applyPrivateDataAction(
+  roomCode: string,
+  pid: string,
+  pdata: Record<string, unknown>
+): Promise<void> {
+  const engineAction = pdata._action as string | undefined;
+
+  if (!engineAction) {
+    // No mutation needed — just write the data directly
+    await set(ref(rtdb, `private/${roomCode}/${pid}`), sanitizeForRTDB(pdata));
+    return;
+  }
+
+  // Read current private node to get existing phrases
+  const snap = await get(ref(rtdb, `private/${roomCode}/${pid}`));
+  const current = snap.val() as Record<string, unknown> | null;
+  let phrases = normalizePhrasesFromRTDB(current?.phrases);
+
+  switch (engineAction) {
+    case 'ADD_PHRASE': {
+      const newPhrase = pdata.newPhrase as PrivatePhrase | undefined;
+      if (newPhrase) phrases = [...phrases, newPhrase];
+      break;
+    }
+    case 'COMPLETE_PHRASE': {
+      const idToComplete = pdata.phraseIdToComplete as string;
+      phrases = phrases.map((p) => p.id === idToComplete ? { ...p, completed: true } : p);
+      break;
+    }
+    case 'REPLACE_PHRASE': {
+      const idToRemove = pdata.phraseIdToRemove as string;
+      const newPhrase = pdata.newPhrase as PrivatePhrase | undefined;
+      phrases = phrases.filter((p) => p.id !== idToRemove);
+      if (newPhrase) phrases = [...phrases, newPhrase];
+      break;
+    }
+  }
+
+  // Write full updated phrase list back (use set() so array isn't mangled)
+  await set(ref(rtdb, `private/${roomCode}/${pid}`), { phrases });
+}
+
 export async function callPlayerAction({ roomCode, action, data, playerId }: PlayerActionPayload & { playerId: string }): Promise<void> {
   const roomDoc = await getDoc(doc(db, 'rooms', roomCode));
   const room = roomDoc.data() as Room;
@@ -174,8 +229,11 @@ export async function callPlayerAction({ roomCode, action, data, playerId }: Pla
   await set(ref(rtdb, `rooms/${roomCode}/gameState`), sanitizeForRTDB(newState));
 
   if (privateData) {
-    const writes = Object.entries(privateData).map(([pid, pdata]) => update(ref(rtdb, `private/${roomCode}/${pid}`), pdata));
-    await Promise.all(writes);
+    await Promise.all(
+      Object.entries(privateData).map(([pid, pdata]) =>
+        applyPrivateDataAction(roomCode, pid, pdata as Record<string, unknown>)
+      )
+    );
   }
 
   if (isGameOver(room.gameId as GameId, newState)) {

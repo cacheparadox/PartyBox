@@ -46,7 +46,14 @@ const CHAMELEON: GamePlugin = {
   },
 
   async handleAction(state: any, playerId: any, action: any, data: any, options: any): Promise<StateTransition> {
-    const s = state as ChameleonGameState;
+    const s: ChameleonGameState = {
+      ...state,
+      clueGrid:      state.clueGrid      ?? [],
+      votes:         state.votes         ?? {},
+      revealedWord:  state.revealedWord  ?? null,
+      chameleonGuess: state.chameleonGuess ?? null,
+      phaseTimeoutMs: state.phaseTimeoutMs ?? null,
+    };
 
     switch (action) {
       case 'START_ROUND':
@@ -55,7 +62,7 @@ const CHAMELEON: GamePlugin = {
       case 'SUBMIT_CLUE': {
         const clue = data.clue as string;
         const newGrid = s.clueGrid.map((c) => (c.playerId === playerId ? { ...c, clue } : c));
-        const allSubmitted = newGrid.every((c) => c.clue !== null);
+        const allSubmitted = newGrid.every((c) => c.clue != null);
 
         return {
           newState: {
@@ -186,7 +193,7 @@ const CHAMELEON: GamePlugin = {
   },
 
   getPhaseTimeout(state) {
-    return (state as ChameleonGameState).phaseTimeoutMs;
+    return (state as ChameleonGameState).phaseTimeoutMs ?? null;
   },
 
   isGameOver(state) {

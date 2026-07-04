@@ -54,7 +54,14 @@ const MOLE: GamePlugin = {
   },
 
   async handleAction(state: any, playerId: any, action: any, data: any, options: any): Promise<StateTransition> {
-    const s = state as MoleGameState;
+    const s: MoleGameState = {
+      ...state,
+      clueGrid:        state.clueGrid        ?? [],
+      votes:           state.votes           ?? {},
+      revealedWord:    state.revealedWord    ?? null,
+      revealedMoleWord: state.revealedMoleWord ?? null,
+      phaseTimeoutMs:  state.phaseTimeoutMs  ?? null,
+    };
 
     switch (action) {
       case 'START_ROUND':
@@ -64,7 +71,7 @@ const MOLE: GamePlugin = {
         const newGrid = s.clueGrid.map((c) =>
           c.playerId === playerId ? { ...c, clue: data.clue as string } : c
         );
-        const allSubmitted = newGrid.every((c) => c.clue !== null);
+        const allSubmitted = newGrid.every((c) => c.clue != null);
         return {
           newState: {
             ...s,
@@ -160,7 +167,7 @@ const MOLE: GamePlugin = {
   },
 
   getPhaseTimeout(state) {
-    return (state as MoleGameState).phaseTimeoutMs;
+    return (state as MoleGameState).phaseTimeoutMs ?? null;
   },
 
   isGameOver(state) {
