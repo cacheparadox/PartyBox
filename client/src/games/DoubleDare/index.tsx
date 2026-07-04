@@ -19,7 +19,6 @@ function useGame() {
 
 export default function DoubleDareView() {
   const { state, players, isHost, playerId, sendAction, roomCode } = useGame();
-  // Hooks must always be called — not inside conditionals
   const navigate = useNavigate();
   const hostId = useRoomStore((s) => s.hostId) ?? '';
   const [bidCount, setBidCount] = useState(5);
@@ -33,8 +32,8 @@ export default function DoubleDareView() {
   // ── Instructions ─────────────────────────────────────────────────────────
   if (state.phase === 'instructions') {
     return (
-      <div className={isHost ? 'host-screen' : 'player-screen items-center justify-center p-6'}>
-        <div className="relative z-10 text-center max-w-lg px-6 animate-pop-in">
+      <div className="player-screen p-6 justify-center">
+        <div className="text-center max-w-lg px-2 animate-pop-in">
           <div className="text-7xl mb-6 animate-float">🎯</div>
           <h1 className="phase-banner text-yellow mb-4">DOUBLE DARE</h1>
           <p className="font-grotesk text-white/60 mb-8 text-lg">
@@ -53,24 +52,24 @@ export default function DoubleDareView() {
     );
   }
 
-  // ── Bidding phase (gameplay, no doubledBy, no performing) ─────────────────
+  // ── Bidding phase ────────────────────────────────────────────────────────
   if (state.phase === 'gameplay') {
     return (
-      <div className={isHost ? 'host-screen' : 'player-screen items-center justify-center p-6'}>
-        <div className="relative z-10 w-full max-w-2xl px-6 space-y-6 text-center animate-pop-in">
+      <div className="player-screen p-4 sm:p-6 gap-6">
+        <div className="w-full space-y-6 text-center animate-pop-in">
           {/* Topic & Current Bid Status */}
-          <div className="card p-8 border-yellow shadow-spray-sm bg-offblack">
+          <div className="card p-6 border-yellow shadow-spray-sm bg-offblack">
             <p className="section-label mb-2">TOPIC</p>
-            <p className="font-bebas text-5xl text-yellow">{state.topic}</p>
-            <div className="flex justify-center gap-4 mt-4 flex-wrap">
-              <span className="tag-yellow text-lg px-4 py-1">{'⭐'.repeat(state.difficulty)} DIFFICULTY</span>
-              <span className="tag-cyan text-lg px-4 py-1 text-black">⏱️ {state.roundTimeLimit} SECONDS</span>
+            <p className="font-bebas text-4xl sm:text-5xl text-yellow leading-none">{state.topic}</p>
+            <div className="flex justify-center gap-3 mt-4 flex-wrap">
+              <span className="tag-yellow text-sm px-3 py-1">{'⭐'.repeat(state.difficulty)} DIFFICULTY</span>
+              <span className="tag-cyan text-sm px-3 py-1 text-black">⏱️ {state.roundTimeLimit}s</span>
             </div>
             
             {state.currentBid && (
-              <div className="mt-8 pt-6 border-t border-white/10">
-                <p className="font-bebas text-white/50 text-xl">CURRENT HIGH BID:</p>
-                <p className="font-bebas text-4xl text-cyan">
+              <div className="mt-6 pt-4 border-t border-white/10">
+                <p className="font-bebas text-white/50 text-sm">CURRENT HIGH BID:</p>
+                <p className="font-bebas text-3xl text-cyan mt-1">
                   {players[state.currentBid.playerId]?.nickname} BIDS {state.currentBid.count}
                 </p>
               </div>
@@ -81,9 +80,9 @@ export default function DoubleDareView() {
             {isMyBid ? 'YOUR TURN!' : `${players[currentBidder]?.nickname || '...'}'S TURN`}
           </p>
 
-          {isMyBid && (
-            <div className="card p-6 space-y-6 bg-offblack border-cyan">
-              <p className="font-marker text-white/60 text-lg">What will you do?</p>
+          {isMyBid ? (
+            <div className="card p-4 sm:p-6 space-y-6 bg-offblack border-cyan">
+              <p className="font-marker text-white/60 text-sm">What will you do?</p>
               
               {/* Bid Controls */}
               <div className="space-y-4">
@@ -99,38 +98,36 @@ export default function DoubleDareView() {
                   </button>
                 </div>
                 <button id="btn-submit-bid" onClick={() => sendAction('SUBMIT_BID', { count: Math.max((state.currentBid?.count || 0) + 1, bidCount) })}
-                  className="btn-primary w-full !bg-yellow !border-yellow !text-black text-2xl py-4 animate-jitter">
+                  className="btn-primary w-full !bg-yellow !border-yellow !text-black text-xl py-3 animate-jitter">
                   BID HIGHER: {Math.max((state.currentBid?.count || 0) + 1, bidCount)}
                 </button>
               </div>
 
               {/* Options if there's already a bid */}
-              {state.currentBid && (
-                <div className="grid grid-cols-3 gap-4 pt-4 border-t border-white/10">
+              {state.currentBid ? (
+                <div className="grid grid-cols-2 gap-3 pt-4 border-t border-white/10">
                   <button onClick={() => sendAction('DOUBLE_DARE')}
-                    className="btn-primary py-4 text-xl !bg-magenta !border-magenta !text-white hover:animate-jitter">
+                    className="btn-primary py-3 text-sm !bg-magenta !border-magenta !text-white hover:animate-jitter col-span-2">
                     🎯 DOUBLE DARE!
                   </button>
                   <button onClick={() => sendAction('ACCEPT_BID')}
-                    className="btn-primary py-4 text-xl !bg-lime !border-lime !text-black">
+                    className="btn-primary py-3 text-sm !bg-lime !border-lime !text-black">
                     ✅ ACCEPT
                   </button>
                   <button onClick={() => sendAction('PASS_BID')}
-                    className="btn-secondary py-4 text-xl">
+                    className="btn-secondary py-3 text-sm">
                     PASS
                   </button>
                 </div>
-              )}
-              {!state.currentBid && (
+              ) : (
                 <button onClick={() => sendAction('PASS_BID')}
-                  className="btn-secondary w-full py-4 text-xl">
+                  className="btn-secondary w-full py-3 text-sm mt-4">
                   PASS (no bid yet)
                 </button>
               )}
             </div>
-          )}
-          {!isMyBid && (
-            <p className="font-marker text-white/40 text-lg animate-pulse">
+          ) : (
+            <p className="font-marker text-white/40 text-sm animate-pulse">
               Waiting for {players[currentBidder]?.nickname || '...'} to bid, dare, or pass...
             </p>
           )}
@@ -146,14 +143,14 @@ export default function DoubleDareView() {
     const isBidder = playerId === state.currentBid?.playerId;
 
     return (
-      <div className={isHost ? 'host-screen' : 'player-screen items-center justify-center p-6'}>
-        <div className="relative z-10 w-full max-w-3xl px-6 space-y-6 text-center animate-pop-in">
-          <div className="flex flex-col md:flex-row items-center justify-between card p-6 bg-offblack border-yellow shadow-spray-sm gap-4">
-            <div className="text-center md:text-left">
+      <div className="player-screen p-4 sm:p-6 gap-6">
+        <div className="w-full space-y-6 text-center animate-pop-in">
+          <div className="card p-4 sm:p-6 bg-offblack border-yellow shadow-spray-sm flex flex-col gap-4">
+            <div className="text-center">
               <p className="section-label text-yellow mb-1">CATEGORY</p>
               <p className="font-bebas text-3xl text-white">{state.topic}</p>
             </div>
-            <div className="flex gap-8">
+            <div className="flex justify-center gap-8 border-t border-white/10 pt-4">
               <div className="text-center">
                 <p className="section-label mb-1">TARGET</p>
                 <p className="font-bebas text-5xl text-white">{state.currentBid?.count}</p>
@@ -171,19 +168,19 @@ export default function DoubleDareView() {
             </p>
           )}
 
-          {isHost && (
-            <div className="flex flex-wrap gap-3 justify-center min-h-[100px] content-start">
-              {(state.answers ?? []).map((a, i) => (
-                <span key={i} className="tag-yellow text-xl px-4 py-2 bg-yellow text-black">{a}</span>
-              ))}
-              {(state.answers ?? []).length === 0 && <p className="font-marker text-white/30 text-xl w-full">Waiting for answers...</p>}
-            </div>
-          )}
+          {/* List of Answers */}
+          <div className="flex flex-wrap gap-2 justify-center content-start">
+            {(state.answers ?? []).map((a, i) => (
+              <span key={i} className="tag-yellow text-lg px-3 py-1 bg-yellow text-black">{a}</span>
+            ))}
+            {(state.answers ?? []).length === 0 && <p className="font-marker text-white/30 text-sm w-full">Waiting for answers...</p>}
+          </div>
+
           {isBidder && (
-            <div className="card p-6 space-y-4 bg-offblack">
-              <p className="font-marker text-white/60 text-lg">Say each answer out loud, then type it</p>
-              <div className="flex gap-3">
-                <input className="input-field flex-1 font-bebas text-2xl" placeholder="NEXT ANSWER..."
+            <div className="card p-4 space-y-4 bg-offblack mt-4">
+              <p className="font-marker text-white/60 text-sm">Say each answer out loud, then type it</p>
+              <div className="flex gap-2">
+                <input className="input-field flex-1 font-bebas text-xl" placeholder="NEXT ANSWER..."
                   value={answer} onChange={(e) => setAnswer(e.target.value)}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' && answer.trim()) {
@@ -192,21 +189,23 @@ export default function DoubleDareView() {
                     }
                   }} />
                 <button onClick={() => { if (answer.trim()) { sendAction('SUBMIT_ANSWER', { answer: answer.trim() }); setAnswer(''); } }}
-                  className="btn-primary px-8 text-3xl !bg-yellow !border-yellow !text-black">+</button>
+                  className="btn-primary px-6 text-2xl !bg-yellow !border-yellow !text-black">+</button>
               </div>
             </div>
           )}
+
           {isHost && (state.answers ?? []).length > 0 && (
-            <div className="flex gap-4 justify-center mt-8">
+            <div className="flex gap-3 justify-center mt-6">
               <button id="btn-vote-valid" onClick={() => sendAction('VOTE_ANSWER', { valid: true })}
-                className="btn-primary flex-1 py-4 text-2xl !bg-lime !border-lime !text-black">👍 VALID</button>
+                className="btn-primary flex-1 py-3 text-lg !bg-lime !border-lime !text-black">👍 VALID</button>
               <button id="btn-vote-invalid" onClick={() => sendAction('VOTE_ANSWER', { valid: false })}
-                className="btn-danger flex-1 py-4 text-2xl">👎 INVALID</button>
+                className="btn-danger flex-1 py-3 text-lg">👎 INVALID</button>
             </div>
           )}
-          {!isBidder && !isHost && (
-            <p className="font-marker text-white/40 text-lg animate-pulse">
-              Watch {bidder?.nickname} perform! Host will validate each answer.
+
+          {!isBidder && (!isHost || (state.answers ?? []).length === 0) && (
+            <p className="font-marker text-white/40 text-sm animate-pulse mt-4">
+              Watch {bidder?.nickname} perform! Host will validate answers.
             </p>
           )}
         </div>
@@ -217,23 +216,24 @@ export default function DoubleDareView() {
   // ── Scoring ────────────────────────────────────────────────────────────────
   if (state.phase === 'scoring') {
     return (
-      <div className={isHost ? 'host-screen' : 'player-screen items-center justify-center p-6'}>
-        <div className="relative z-10 w-full max-w-md px-6 text-center space-y-6 animate-pop-in">
+      <div className="player-screen p-4 sm:p-6 justify-center">
+        <div className="w-full text-center space-y-6 animate-pop-in">
           <h2 className="phase-banner text-yellow mb-4">ROUND {state.round}</h2>
-          <div className="card p-6 bg-offblack shadow-spray-sm border-spray">
+          <div className="card p-4 sm:p-6 bg-offblack shadow-spray-sm border-spray max-w-sm mx-auto">
             {Object.values(players).sort((a,b) => (state.scores[b.id]??0)-(state.scores[a.id]??0)).map((p, i) => (
-              <div key={p.id} className="score-row">
-                <span className="text-white/40 font-bebas text-xl w-6">{i+1}.</span>
-                <span className="flex-1 text-left font-grotesk text-lg">{p.nickname}</span>
-                <span className="font-bebas text-2xl text-yellow">{state.scores[p.id] ?? 0} PTS</span>
+              <div key={p.id} className="score-row py-1 border-b border-white/5 last:border-0">
+                <span className="text-white/40 font-bebas text-lg w-6">{i+1}.</span>
+                <span className="flex-1 text-left font-grotesk text-base">{p.nickname}</span>
+                <span className="font-bebas text-xl text-yellow">{state.scores[p.id] ?? 0} PTS</span>
               </div>
             ))}
           </div>
           {isHost && (
-            <button onClick={() => sendAction('NEXT_ROUND')} className="btn-primary btn-lg btn-full">
+            <button onClick={() => sendAction('NEXT_ROUND')} className="btn-primary btn-lg w-full mt-4">
               {state.round >= state.maxRounds ? '🏆 SEE WINNER' : '▶ NEXT ROUND'}
             </button>
           )}
+          {!isHost && <p className="font-marker text-white/40 text-sm animate-pulse mt-4">Waiting for host to continue...</p>}
         </div>
       </div>
     );
@@ -243,24 +243,25 @@ export default function DoubleDareView() {
   if (state.phase === 'winner') {
     const sorted = Object.values(players).sort((a,b) => (state.scores[b.id]??0)-(state.scores[a.id]??0));
     return (
-      <div className="host-screen">
-        <div className="text-8xl text-center mb-6 animate-float">🏆</div>
-        <h2 className="phase-banner text-yellow text-center mb-8" style={{ textShadow: '6px 6px 0 #FF2D78' }}>
+      <div className="player-screen p-6 justify-center">
+        <div className="text-7xl text-center mb-6 animate-float">🏆</div>
+        <h2 className="phase-banner text-yellow text-center mb-8" style={{ textShadow: '4px 4px 0 #FF2D78' }}>
           {sorted[0]?.nickname} WINS!
         </h2>
         
-        <div className="card p-8 shadow-magenta border-magenta w-full max-w-md mx-auto mb-8 bg-offblack">
+        <div className="card p-6 shadow-magenta border-magenta w-full bg-offblack">
           {sorted.map((p,i) => (
-            <div key={p.id} className="score-row py-3">
-              <span className="text-3xl w-10 text-center">{i===0?'🥇':i===1?'🥈':i===2?'🥉':`${i+1}.`}</span>
-              <span className="flex-1 font-bebas text-2xl tracking-wide">{p.nickname}</span>
-              <span className="font-bebas text-3xl text-yellow">{state.scores[p.id]??0}</span>
+            <div key={p.id} className="score-row py-2 border-b border-white/10 last:border-0">
+              <span className="text-2xl w-8 text-center">{i===0?'🥇':i===1?'🥈':i===2?'🥉':`${i+1}.`}</span>
+              <span className="flex-1 font-bebas text-xl tracking-wide">{p.nickname}</span>
+              <span className="font-bebas text-2xl text-yellow">{state.scores[p.id]??0}</span>
             </div>
           ))}
         </div>
 
         {isHost && <button onClick={async () => { await callEndGame({ roomCode: roomCode!, requestingPlayerId: hostId }); navigate(`/lobby/${roomCode}`); }} 
-          className="btn-primary btn-lg">🔁 RETURN TO LOBBY</button>}
+          className="btn-primary btn-lg w-full mt-8">🔁 RETURN TO LOBBY</button>}
+        {!isHost && <p className="font-marker text-white/40 text-sm animate-pulse mt-8 text-center">Waiting for host...</p>}
       </div>
     );
   }

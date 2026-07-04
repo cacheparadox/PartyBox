@@ -28,8 +28,8 @@ export default function MoleView() {
 
   if (state.phase === 'instructions') {
     return (
-      <div className={isHost ? 'host-screen' : 'player-screen items-center justify-center p-6'}>
-        <div className="relative z-10 text-center max-w-lg px-6 animate-pop-in">
+      <div className="player-screen p-6 justify-center">
+        <div className="text-center max-w-lg px-2 animate-pop-in">
           <div className="text-7xl mb-6 animate-float">🕵️</div>
           <h1 className="phase-banner text-magenta mb-4">MOLE</h1>
           <p className="font-grotesk text-white/60 mb-8 text-lg">
@@ -50,144 +50,142 @@ export default function MoleView() {
     const submittedCount = (state.clueGrid ?? []).filter((c) => c.clue != null).length;
 
     return (
-      <div className={isHost ? 'host-screen' : 'player-screen items-center justify-center p-6'}>
-        {isHost ? (
-          <div className="relative z-10 w-full max-w-4xl px-8 text-center animate-pop-in">
-            <div className="card p-8 mb-6 inline-block bg-offblack border-lime shadow-spray-sm">
-              <p className="section-label mb-2">CATEGORY</p>
-              <p className="font-bebas text-5xl text-white">{state.category}</p>
-            </div>
-            <p className="font-marker text-white/50 mb-8">CLUES SUBMITTED: {submittedCount}/{state.clueGrid.length}</p>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {state.clueGrid.map((c) => {
-                const player = players[c.playerId];
-                return (
-                  <div key={c.playerId} className={`card p-4 text-center transition-all bg-offblack
-                    ${c.clue ? 'border-lime shadow-spray-sm' : 'border-white/10'}`}>
-                    <p className="font-grotesk text-white/50 text-xs mb-2">{player?.nickname}</p>
-                    {c.clue ? (
-                      <p className="font-bebas text-2xl text-lime">"{c.clue}"</p>
-                    ) : (
-                      <div className="w-16 h-2 bg-white/10 rounded animate-pulse mx-auto" />
-                    )}
-                  </div>
-                );
-              })}
-            </div>
+      <div className="player-screen p-4 sm:p-6 gap-6">
+        <div className="animate-pop-in space-y-6 w-full">
+          {/* Board */}
+          <div className="card p-4 sm:p-6 text-center border-lime bg-offblack shadow-spray-sm">
+            <p className="section-label mb-1">CATEGORY</p>
+            <p className="font-bebas text-4xl text-white">{state.category}</p>
           </div>
-        ) : (
-          <div className="relative z-10 w-full space-y-6 animate-pop-in mt-8">
-            <div className="card p-6 text-center border-white/20 bg-offblack shadow-magenta">
-              <p className="section-label mb-2">CATEGORY</p>
-              <p className="font-bebas text-3xl text-white">{state.category}</p>
-            </div>
-            <div className="card p-8 text-center border-lime shadow-spray-sm bg-offblack">
-              <p className="section-label text-lime mb-2">YOUR WORD</p>
-              <p className="font-bebas text-4xl text-white">{myPrivate?.word}</p>
-              <p className="font-marker text-white/50 text-sm mt-3">Give a clue — but don't say the word!</p>
-            </div>
-            {!submitted ? (
-              <ClueInput onSubmit={(clue) => sendAction('SUBMIT_CLUE', { clue })} />
-            ) : (
-              <div className="card p-4 text-center border-lime shadow-spray-sm bg-offblack">
-                <p className="text-lime font-bebas text-2xl mb-1">✅ CLUE SUBMITTED</p>
-                <p className="font-marker text-white/40 text-sm">Waiting for others...</p>
-              </div>
-            )}
+
+          <p className="font-marker text-white/50 text-center text-sm">CLUES SUBMITTED: {submittedCount}/{state.clueGrid.length}</p>
+          <div className="grid grid-cols-2 gap-3">
+            {state.clueGrid.map((c) => {
+              const player = players[c.playerId];
+              const isMe = c.playerId === playerId;
+              return (
+                <div key={c.playerId} className={`card p-3 text-center transition-all bg-offblack ${c.clue ? 'border-lime' : 'border-white/10'}`}>
+                  <p className="font-grotesk text-white/50 text-xs mb-1">{isMe ? 'YOU' : player?.nickname}</p>
+                  {c.clue ? (
+                    <p className="font-bebas text-xl text-lime break-words">"{c.clue}"</p>
+                  ) : (
+                    <div className="w-8 h-1.5 bg-white/10 rounded animate-pulse mx-auto mt-2" />
+                  )}
+                </div>
+              );
+            })}
           </div>
-        )}
+
+          {/* Private Controls */}
+          <div className="card p-6 text-center border-magenta shadow-magenta bg-offblack mt-4">
+            <p className="section-label text-magenta mb-2">YOUR SECRET WORD</p>
+            <p className="font-bebas text-4xl text-white">{myPrivate?.word}</p>
+            <p className="font-marker text-white/50 text-sm mt-3">Give a clue — but don't say the word!</p>
+          </div>
+
+          {!submitted ? (
+            <ClueInput onSubmit={(clue) => sendAction('SUBMIT_CLUE', { clue })} />
+          ) : (
+            <div className="card p-4 text-center border-lime bg-offblack">
+              <p className="text-lime font-bebas text-2xl mb-1">✅ CLUE SUBMITTED</p>
+              <p className="font-marker text-white/40 text-sm animate-pulse">Waiting for others...</p>
+            </div>
+          )}
+        </div>
       </div>
     );
   }
 
   if (state.phase === 'voting') {
     return (
-      <div className={isHost ? 'host-screen' : 'player-screen items-center justify-center p-6'}>
-        {isHost ? (
-          <div className="relative z-10 w-full max-w-4xl px-8 text-center animate-pop-in">
-            <h2 className="phase-banner text-magenta mb-2">WHO HAS A DIFFERENT WORD?</h2>
-            <p className="font-marker text-white/50 mb-8">Discuss and cast your votes!</p>
-            <div className="grid grid-cols-2 gap-4 mb-6">
-              {state.clueGrid.map((c) => {
-                const player = players[c.playerId];
-                const voteCount = Object.values(state.votes).filter((v) => v === c.playerId).length;
+      <div className="player-screen p-4 sm:p-6 gap-6">
+        <div className="animate-pop-in space-y-4 w-full">
+          <h2 className="phase-banner text-magenta text-center text-4xl">WHO'S THE MOLE?</h2>
+          <p className="font-marker text-white/50 text-center text-sm">VOTES: {Object.keys(state.votes).length}/{state.clueGrid.length}</p>
+          
+          <div className="space-y-3 mt-4">
+            {state.clueGrid.map((c) => {
+              const player = players[c.playerId];
+              const isMe = c.playerId === playerId;
+              const voteCount = Object.values(state.votes).filter((v) => v === c.playerId).length;
+              const votedByMe = myVote === c.playerId;
+
+              if (isMe) {
                 return (
-                  <div key={c.playerId} className={`card p-4 text-center bg-offblack ${voteCount > 0 ? 'border-magenta' : 'border-white/10'}`}>
-                    <p className="font-bebas text-xl">{player?.nickname}</p>
-                    <p className="text-lime text-2xl font-bebas mt-1">"{c.clue}"</p>
-                    {voteCount > 0 && <div className="mt-2 flex justify-center gap-1">
-                      {Array.from({ length: voteCount }).map((_, i) => <span key={i} className="text-magenta">❌</span>)}
-                    </div>}
+                  <div key={c.playerId} className="card p-4 bg-offblack border-white/20 opacity-70">
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <p className="font-bebas text-lg text-white/50">YOU</p>
+                        <p className="font-marker text-white/40 text-sm">Said: "{c.clue}"</p>
+                      </div>
+                      {voteCount > 0 && <span className="text-magenta font-bebas text-xl">{voteCount} ❌</span>}
+                    </div>
                   </div>
                 );
-              })}
-            </div>
-            <p className="font-marker text-white/40 pt-4">VOTES: {Object.keys(state.votes).length}/{state.clueGrid.length}</p>
+              }
+
+              return (
+                <button key={c.playerId} id={`vote-mole-${c.playerId}`}
+                  onClick={() => !myVote && sendAction('VOTE', { targetId: c.playerId })}
+                  disabled={!!myVote}
+                  className={`vote-ticket justify-between items-center w-full transition-all
+                    ${votedByMe ? 'border-magenta bg-magenta/10 shadow-magenta' : 'border-white/20 bg-offblack'}`}>
+                  <div className="text-left flex-1">
+                    <p className="font-bebas text-xl">{player?.nickname}</p>
+                    <p className="font-marker text-white/60 text-sm">Said: "{c.clue}"</p>
+                  </div>
+                  <div className="flex flex-col items-end gap-1">
+                    {votedByMe && <span className="tag-magenta text-[10px]">YOUR VOTE</span>}
+                    {voteCount > 0 && <span className="text-magenta font-bebas text-xl">{voteCount} ❌</span>}
+                  </div>
+                </button>
+              );
+            })}
           </div>
-        ) : (
-          <div className="relative z-10 w-full space-y-4 animate-pop-in mt-8">
-            <h2 className="font-bebas text-3xl text-center text-magenta">WHO'S THE MOLE?</h2>
-            <div className="space-y-3">
-              {state.clueGrid.filter((c) => c.playerId !== playerId).map((c) => {
-                const player = players[c.playerId];
-                const voted = myVote === c.playerId;
-                return (
-                  <button key={c.playerId} id={`vote-mole-${c.playerId}`}
-                    onClick={() => !myVote && sendAction('VOTE', { targetId: c.playerId })}
-                    disabled={!!myVote}
-                    className={`vote-ticket justify-between items-center
-                      ${voted ? 'border-magenta bg-magenta/10' : ''}`}>
-                    <div className="text-left flex-1">
-                      <p className="font-bebas text-xl">{player?.nickname}</p>
-                      <p className="font-marker text-white/50 text-sm">Said: "{c.clue}"</p>
-                    </div>
-                    {voted && <span className="tag-magenta ml-2 shrink-0">YOUR VOTE</span>}
-                  </button>
-                );
-              })}
-            </div>
-            {myVote && <p className="text-white/40 text-center font-marker text-sm animate-pulse">Waiting for all votes...</p>}
-          </div>
-        )}
+          {myVote && <p className="text-white/40 text-center font-marker text-sm animate-pulse mt-4">Waiting for all votes...</p>}
+        </div>
       </div>
     );
   }
 
   if (state.phase === 'scoring') {
     return (
-      <div className={isHost ? 'host-screen' : 'player-screen items-center justify-center p-6'}>
-        <div className="relative z-10 w-full max-w-2xl px-6 text-center space-y-6 animate-pop-in">
+      <div className="player-screen p-4 sm:p-6 justify-center">
+        <div className="w-full text-center space-y-6 animate-pop-in">
           <div>
-            <p className="text-6xl mb-4">🕵️</p>
-            <h2 className="font-marker text-2xl text-white/60 mb-2">THE MOLE WAS...</h2>
-            <p className="font-bebas text-6xl text-magenta mb-4" style={{ textShadow: '4px 4px 0 #F5E642' }}>
+            <p className="text-6xl mb-4 animate-float">🕵️</p>
+            <h2 className="font-marker text-xl text-white/60 mb-2">THE MOLE WAS...</h2>
+            <p className="font-bebas text-5xl text-magenta mb-4" style={{ textShadow: '4px 4px 0 #F5E642' }}>
               {players[state.moleId]?.nickname}
             </p>
+            
             {state.revealedWord && (
-              <div className="mt-6 flex gap-4 justify-center">
-                <div className="card p-4 border-lime shadow-spray-sm bg-offblack w-48">
-                  <p className="section-label mb-2 text-lime">EVERYONE'S WORD</p>
-                  <p className="font-bebas text-2xl text-white">{state.revealedWord}</p>
+              <div className="mt-6 flex flex-col gap-3 justify-center max-w-sm mx-auto">
+                <div className="card p-3 border-lime shadow-spray-sm bg-offblack w-full flex justify-between items-center">
+                  <p className="section-label text-lime">EVERYONE'S WORD</p>
+                  <p className="font-bebas text-xl text-white">{state.revealedWord}</p>
                 </div>
-                <div className="card p-4 border-magenta shadow-magenta bg-offblack w-48">
-                  <p className="section-label mb-2 text-magenta">MOLE'S WORD</p>
-                  <p className="font-bebas text-2xl text-white">{state.revealedMoleWord}</p>
+                <div className="card p-3 border-magenta shadow-magenta bg-offblack w-full flex justify-between items-center">
+                  <p className="section-label text-magenta">MOLE'S WORD</p>
+                  <p className="font-bebas text-xl text-white">{state.revealedMoleWord}</p>
                 </div>
               </div>
             )}
           </div>
           
-          <div className="card p-6 bg-offblack shadow-spray-sm border-spray max-w-md mx-auto mt-8">
+          <div className="card p-4 bg-offblack shadow-spray-sm border-spray max-w-sm mx-auto mt-6">
+            <p className="section-label mb-3">SCORES</p>
             {Object.values(players).sort((a,b) => (state.scores[b.id]??0)-(state.scores[a.id]??0)).map((p,i) => (
-              <div key={p.id} className="score-row">
-                <span className="text-white/40 font-bebas text-xl w-6">{i+1}.</span>
-                <span className="flex-1 text-left font-grotesk text-lg">{p.nickname}</span>
-                <span className="font-bebas text-2xl text-lime">{state.scores[p.id]??0} PTS</span>
+              <div key={p.id} className="score-row py-1 border-b border-white/5 last:border-0">
+                <span className="text-white/40 font-bebas text-lg w-6">{i+1}.</span>
+                <span className="flex-1 text-left font-grotesk text-base">{p.nickname}</span>
+                <span className="font-bebas text-xl text-lime">{state.scores[p.id]??0}</span>
               </div>
             ))}
           </div>
-          {isHost && <button onClick={() => sendAction('NEXT_ROUND')} className="btn-primary btn-lg btn-full">
+          {isHost && <button onClick={() => sendAction('NEXT_ROUND')} className="btn-primary btn-lg w-full mt-4">
             {state.round >= state.maxRounds ? '🏆 SEE WINNER' : '▶ NEXT ROUND'}</button>}
+          {!isHost && <p className="font-marker text-white/40 text-sm animate-pulse mt-4">Waiting for host to continue...</p>}
         </div>
       </div>
     );
@@ -196,24 +194,25 @@ export default function MoleView() {
   if (state.phase === 'winner') {
     const sorted = Object.values(players).sort((a,b) => (state.scores[b.id]??0)-(state.scores[a.id]??0));
     return (
-      <div className="host-screen">
-        <div className="text-8xl text-center mb-6 animate-float">🏆</div>
-        <h2 className="phase-banner text-lime text-center mb-8" style={{ textShadow: '6px 6px 0 #FF2D78' }}>
+      <div className="player-screen p-6 justify-center">
+        <div className="text-7xl text-center mb-6 animate-float">🏆</div>
+        <h2 className="phase-banner text-lime text-center mb-8" style={{ textShadow: '4px 4px 0 #FF2D78' }}>
           {sorted[0]?.nickname} WINS!
         </h2>
         
-        <div className="card p-8 shadow-magenta border-magenta w-full max-w-md mx-auto mb-8 bg-offblack">
+        <div className="card p-6 shadow-magenta border-magenta w-full bg-offblack">
           {sorted.map((p,i) => (
-            <div key={p.id} className="score-row py-3">
-              <span className="text-3xl w-10 text-center">{i===0?'🥇':i===1?'🥈':i===2?'🥉':`${i+1}.`}</span>
-              <span className="flex-1 font-bebas text-2xl tracking-wide">{p.nickname}</span>
-              <span className="font-bebas text-3xl text-magenta">{state.scores[p.id]??0}</span>
+            <div key={p.id} className="score-row py-2 border-b border-white/10 last:border-0">
+              <span className="text-2xl w-8 text-center">{i===0?'🥇':i===1?'🥈':i===2?'🥉':`${i+1}.`}</span>
+              <span className="flex-1 font-bebas text-xl tracking-wide">{p.nickname}</span>
+              <span className="font-bebas text-2xl text-magenta">{state.scores[p.id]??0}</span>
             </div>
           ))}
         </div>
 
         {isHost && <button onClick={async () => { await callEndGame({ roomCode: roomCode!, requestingPlayerId: hostId }); navigate(`/lobby/${roomCode}`); }} 
-          className="btn-primary btn-lg">🔁 RETURN TO LOBBY</button>}
+          className="btn-primary btn-lg w-full mt-8">🔁 RETURN TO LOBBY</button>}
+        {!isHost && <p className="font-marker text-white/40 text-sm animate-pulse mt-8 text-center">Waiting for host...</p>}
       </div>
     );
   }
@@ -224,7 +223,7 @@ export default function MoleView() {
 function ClueInput({ onSubmit }: { onSubmit: (clue: string) => void }) {
   const [clue, setClue] = useState('');
   return (
-    <div className="card p-4 space-y-4 bg-offblack shadow-cyan border-cyan">
+    <div className="card p-4 space-y-4 bg-offblack shadow-cyan border-cyan mt-4">
       <input id="input-mole-clue" className="input-field text-center font-bebas text-2xl"
         placeholder="YOUR CLUE..." value={clue} onChange={(e) => setClue(e.target.value)} maxLength={30}
         onKeyDown={(e) => e.key === 'Enter' && clue.trim() && (onSubmit(clue.trim()), setClue(''))} />
