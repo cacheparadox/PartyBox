@@ -31,11 +31,14 @@ const SLIP_IT_IN: GamePlugin = {
     playerIds.forEach((playerId, idx) => {
       const phrases: SlipItInPhrase[] = shuffledPhrases
         .slice(idx * PHRASES_PER_PLAYER, (idx + 1) * PHRASES_PER_PLAYER)
-        .map((e) => ({
-          id: generatePhraseId(),
-          phrase: (e as { phrase: string }).phrase,
-          completed: false,
-        }));
+        .map((e) => {
+          const phraseString = (e as any).phrase || (e as any).text || 'Something went wrong';
+          return {
+            id: generatePhraseId(),
+            phrase: phraseString,
+            completed: false,
+          };
+        });
 
       privateData[playerId] = { phrases };
       playerPhraseCount[playerId] = PHRASES_PER_PLAYER;
